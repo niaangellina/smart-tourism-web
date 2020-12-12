@@ -30,7 +30,6 @@ export default {
       this.timeout = setTimeout(callback, duration);
     },
     showSnackbar() {
-      console.log(this.snackbar);
       this.snackbar = true;
       this.timer(() => {
         this.closeSnackbar();

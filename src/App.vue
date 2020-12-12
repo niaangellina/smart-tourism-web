@@ -6,8 +6,7 @@
       </v-toolbar-title>
     </v-app-bar>
     <Navigation />
-    <!-- <Toast :app="this" />
-    <Confirmation :app="this" /> -->
+    <Toast />
     <v-main>
       <router-view />
     </v-main>
@@ -16,15 +15,13 @@
 
 <script>
 import Navigation from "./components/Navigation";
-// import Toast from './components/Toast'
-// import Confirmation from './components/Confirmation'
+import Toast from "./components/Toast";
 
 export default {
   name: "App",
   components: {
-    Navigation
-    // Toast,
-    // Confirmation
+    Navigation,
+    Toast
   }
 };
 </script>

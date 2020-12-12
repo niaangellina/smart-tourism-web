@@ -26,7 +26,7 @@ import { mapState } from "vuex";
 export default {
   name: "Navigation",
   computed: {
-    ...mapState("navigation", ["routes", "currentRoute"]),
+    ...mapState("navigation", ["currentRoute", "routes"]),
     selectedRoute: {
       get() {
         let selectedIndex = 0;

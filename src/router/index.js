@@ -1,23 +1,19 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
+    path: "/location",
+    alias: "/",
+    name: "LocationList",
+    component: () => import("../views/LocationList")
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+    path: "/card",
+    name: "CardList",
+    component: () => import("../views/CardList")
   }
 ];
 
@@ -25,6 +21,18 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+import store from "../store";
+
+router.beforeEach((to, _, next) => {
+  store.state.navigation.routes.forEach(route => {
+    if (route.path == to.path) {
+      store.state.navigation.currentRoute = route;
+    }
+  });
+
+  next();
 });
 
 export default router;

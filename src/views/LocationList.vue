@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     remove(item) {
-      this.$store.dispatch("confirmation/ask",{
+      this.$store.dispatch("confirmation/ask", {
         message: `Apakah anda yakin ingin menghapus lokasi "${item.name}"?`,
         callback: () => {
           return this.$store.dispatch("location/remove", {

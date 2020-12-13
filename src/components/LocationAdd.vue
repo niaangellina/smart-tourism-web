@@ -13,7 +13,7 @@
         <v-toolbar-title>Lokasi Baru</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
-        <v-divider inset vertical/>
+        <v-divider inset vertical />
         <v-row>
           <v-col cols="6">
             <v-text-field
@@ -91,7 +91,13 @@ export default {
   }),
   computed: {
     submitDisabled() {
-      return this.submitting || !this.name || !this.type || !this.longitude || !this.latitude;
+      return (
+        this.submitting ||
+        !this.name ||
+        !this.type ||
+        !this.longitude ||
+        !this.latitude
+      );
     }
   },
   methods: {
@@ -106,14 +112,15 @@ export default {
     },
     submit() {
       this.submitting = true;
-      this.$store.dispatch("location/create", {
-        location: {
-          name: this.name,
-          type: this.type,
-          longitude: this.longitude,
-          latitude: this.latitude
-        }
-      })
+      this.$store
+        .dispatch("location/create", {
+          location: {
+            name: this.name,
+            type: this.type,
+            longitude: this.longitude,
+            latitude: this.latitude
+          }
+        })
         .then(() => {
           this.close();
           this.reset();

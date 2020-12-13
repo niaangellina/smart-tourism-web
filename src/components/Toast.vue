@@ -49,6 +49,7 @@ export default {
         this.showSnackbar();
       } else {
         this.snackbar = false;
+        clearTimeout(this.timeout);
       }
     }
   }

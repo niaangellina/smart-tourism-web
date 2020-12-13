@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app clipped permanent>
+  <v-navigation-drawer app clipped permanent dark>
     <v-list nav>
       <v-list-item-group v-model="selectedRoute">
         <v-list-item

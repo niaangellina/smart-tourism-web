@@ -2,6 +2,8 @@ const navigation = {
   namespaced: true,
   state: () => ({
     currentRoute: {
+      title: "Daftar Lokasi",
+      icon: "mdi-view-list",
       path: "/location"
     },
     routes: [

@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app clipped-left color="primary" dark>
       <v-toolbar-title>
-        <b>Smart Visitor Web</b>
+        <b>Smart Visitor Web | </b> {{ currentRoute.title }}
       </v-toolbar-title>
     </v-app-bar>
     <Confirmation />
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import Confirmation from "./components/Confirmation";
 import Navigation from "./components/Navigation";
 import Toast from "./components/Toast";
@@ -25,6 +26,9 @@ export default {
     Confirmation,
     Navigation,
     Toast
+  },
+  computed: {
+    ...mapState("navigation", ["currentRoute"])
   }
 };
 </script>

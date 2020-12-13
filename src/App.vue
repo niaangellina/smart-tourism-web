@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app clipped-left color="primary" dark>
       <v-toolbar-title>
-        <b>Smart Visitor Web | </b> {{ currentRoute.title }}
+        <b>Smart Tourism Web | </b> {{ currentRoute.title }}
       </v-toolbar-title>
     </v-app-bar>
     <Confirmation />

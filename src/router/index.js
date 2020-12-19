@@ -11,6 +11,26 @@ const routes = [
     component: () => import("../views/LocationList")
   },
   {
+    path: "/formulir",
+    name: "Formulir",
+    component: () => import("../views/Formulir")
+  },
+  {
+    path: "/gate",
+    name: "GateList",
+    component: () => import("../views/GateList")
+  },
+  {
+    path: "/visitor",
+    name: "VisitorList",
+    component: () => import("../views/VisitorList")
+  },
+  {
+    path: "/visitation",
+    name: "VisitationList",
+    component: () => import("../views/VisitationList")
+  },
+  {
     path: "/card",
     name: "CardList",
     component: () => import("../views/CardList")

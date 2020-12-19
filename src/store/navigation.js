@@ -8,14 +8,34 @@ const navigation = {
     },
     routes: [
       {
-        title: "Daftar Lokasi",
+        title: "Formulir",
         icon: "mdi-view-list",
-        path: "/location"
+        path: "/formulir"
       },
       {
         title: "Daftar Kartu",
         icon: "mdi-view-list",
         path: "/card"
+      },
+      {
+        title: "Daftar Pengunjung",
+        icon: "mdi-view-list",
+        path: "/visitor"
+      },
+      {
+        title: "Daftar Lokasi",
+        icon: "mdi-view-list",
+        path: "/location"
+      },
+      {
+        title: "Daftar Gate",
+        icon: "mdi-view-list",
+        path: "/gate"
+      },
+      {
+        title: "Daftar Kunjungan",
+        icon: "mdi-view-list",
+        path: "/visitation"
       }
     ]
   }),

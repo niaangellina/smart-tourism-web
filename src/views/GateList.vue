@@ -4,16 +4,16 @@
       <v-col cols="10">
         <v-data-table
           :headers="headers"
-          :items="cards"
+          :items="gates"
           sort-by="id"
           class="elevation-1"
         >
           <template v-slot:top>
             <v-toolbar flat>
-              <v-toolbar-title>Daftar Kartu</v-toolbar-title>
+              <v-toolbar-title>Daftar Gate</v-toolbar-title>
               <v-divider class="mx-4" inset vertical />
               <v-spacer />
-              <CardAdd />
+              <GateAdd />
             </v-toolbar>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
@@ -29,39 +29,38 @@
 </template>
 
 <script>
-import CardAdd from "../components/CardAdd";
+import GateAdd from "../components/GateAdd";
 import { mapState } from "vuex";
 
 export default {
-  name: "CardList",
+  name: "GateList",
   components: {
-    CardAdd,
+    GateAdd,
   },
   data: () => ({
     headers: [
       { text: "Id", value: "id" },
-      { text: "Id Tag", value: "tagId" },
-      { text: "Tanggal Berlaku", value: "validityDate" },
+      { text: "Id Lokasi", value: "locationId" },
       { text: "Perintah", value: "actions", sortable: false },
     ],
   }),
   computed: {
-    ...mapState("card", ["cards"]),
+    ...mapState("gate", ["gates"]),
   },
   methods: {
     remove(item) {
       this.$store.dispatch("confirmation/ask", {
-        message: `Apakah anda yakin ingin menghapus card "${item.id}"?`,
+        message: `Apakah anda yakin ingin menghapus gate "${item.id}"?`,
         callback: () => {
-          return this.$store.dispatch("card/remove", {
-            cardId: item.id,
+          return this.$store.dispatch("gate/remove", {
+            gateId: item.id,
           });
         },
       });
     },
   },
   mounted() {
-    this.$store.dispatch("card/findAll");
+    this.$store.dispatch("gate/findAll");
   },
 };
 </script>

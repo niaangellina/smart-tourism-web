@@ -5,7 +5,7 @@
         <v-data-table
           :headers="headers"
           :items="locations"
-          sort-by="name"
+          sort-by="id"
           class="elevation-1"
         >
           <template v-slot:top>
@@ -21,9 +21,7 @@
               <v-icon left>mdi-delete</v-icon> hapus
             </v-btn>
           </template>
-          <template v-slot:no-data>
-            Tidak ada data
-          </template>
+          <template v-slot:no-data> Tidak ada data </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -37,19 +35,20 @@ import { mapState } from "vuex";
 export default {
   name: "LocationList",
   components: {
-    LocationAdd
+    LocationAdd,
   },
   data: () => ({
     headers: [
+      { text: "Id", value: "id" },
       { text: "Nama", value: "name" },
       { text: "Jenis", value: "type" },
       { text: "Sudut Bujur", value: "longitude" },
       { text: "Sudut Lintang", value: "latitude" },
-      { text: "Perintah", value: "actions", sortable: false }
-    ]
+      { text: "Perintah", value: "actions", sortable: false },
+    ],
   }),
   computed: {
-    ...mapState("location", ["locations"])
+    ...mapState("location", ["locations"]),
   },
   methods: {
     remove(item) {
@@ -57,14 +56,14 @@ export default {
         message: `Apakah anda yakin ingin menghapus lokasi "${item.name}"?`,
         callback: () => {
           return this.$store.dispatch("location/remove", {
-            locationId: item.id
+            locationId: item.id,
           });
-        }
+        },
       });
-    }
+    },
   },
   mounted() {
     this.$store.dispatch("location/findAll");
-  }
+  },
 };
 </script>

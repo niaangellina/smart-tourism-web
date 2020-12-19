@@ -4,16 +4,16 @@
       <v-col cols="10">
         <v-data-table
           :headers="headers"
-          :items="cards"
+          :items="visitations"
           sort-by="id"
           class="elevation-1"
         >
           <template v-slot:top>
             <v-toolbar flat>
-              <v-toolbar-title>Daftar Kartu</v-toolbar-title>
+              <v-toolbar-title>Daftar Kunjungan</v-toolbar-title>
               <v-divider class="mx-4" inset vertical />
               <v-spacer />
-              <CardAdd />
+              <VisitationAdd />
             </v-toolbar>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
@@ -29,39 +29,40 @@
 </template>
 
 <script>
-import CardAdd from "../components/CardAdd";
+import VisitationAdd from "../components/VisitationAdd";
 import { mapState } from "vuex";
 
 export default {
-  name: "CardList",
+  name: "VisitationList",
   components: {
-    CardAdd,
+    VisitationAdd,
   },
   data: () => ({
     headers: [
       { text: "Id", value: "id" },
-      { text: "Id Tag", value: "tagId" },
-      { text: "Tanggal Berlaku", value: "validityDate" },
+      { text: "Id Pengunjung", value: "visitorId" },
+      { text: "Id Gate", value: "gateId" },
+      { text: "Waktu", value: "timestamp" },
       { text: "Perintah", value: "actions", sortable: false },
     ],
   }),
   computed: {
-    ...mapState("card", ["cards"]),
+    ...mapState("visitation", ["visitations"]),
   },
   methods: {
     remove(item) {
       this.$store.dispatch("confirmation/ask", {
-        message: `Apakah anda yakin ingin menghapus card "${item.id}"?`,
+        message: `Apakah anda yakin ingin menghapus visitation "${item.name}"?`,
         callback: () => {
-          return this.$store.dispatch("card/remove", {
-            cardId: item.id,
+          return this.$store.dispatch("visitation/remove", {
+            visitationId: item.id,
           });
         },
       });
     },
   },
   mounted() {
-    this.$store.dispatch("card/findAll");
+    this.$store.dispatch("visitation/findAll");
   },
 };
 </script>

@@ -29,7 +29,9 @@ const card = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { info, card }) {
+    async create({ commit, dispatch }, params) {
+      const { info, card } = params || {};
+
       try {
         const res = await http.post("/api/card", card);
         commit("update", { card: res.data });
@@ -53,7 +55,9 @@ const card = {
         }
       }
     },
-    async findAll({ commit, dispatch }, { info }) {
+    async findAll({ commit, dispatch }, params) {
+      const { info } = params || {};
+
       try {
         const res = await http.get("/api/card");
         commit("replace", { cards: res.data });
@@ -73,7 +77,9 @@ const card = {
         }
       }
     },
-    async remove({ commit, dispatch }, { info, cardId }) {
+    async remove({ commit, dispatch }, params) {
+      const { info, cardId } = params || {};
+
       try {
         const res = await http.delete(`/api/card/${cardId}`);
         commit("remove", { cardId: res.data.id });

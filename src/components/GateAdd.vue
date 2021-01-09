@@ -15,15 +15,28 @@
       <v-card-text>
         <v-divider inset vertical />
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
-              v-model="locationId"
-              label="ID Lokasi"
+              v-model="name"
+              label="Nama"
               :disabled="submitting"
               hide-details
               dense
               outlined
             ></v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-select
+              v-model="locationId"
+              label="Lokasi"
+              :items="locations"
+              item-text="name"
+              item-value="id"
+              :disabled="submitting"
+              hide-details
+              dense
+              outlined
+            ></v-select>
           </v-col>
           <v-col cols="6">
             <v-select
@@ -56,11 +69,14 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "GateAdd",
   data: () => ({
     dialog: false,
     submitting: false,
+    name: null,
     locationId: null,
     type: null,
     types: [
@@ -70,11 +86,13 @@ export default {
   }),
   computed: {
     submitDisabled() {
-      return this.submitting || !this.locationId || !this.type;
-    }
+      return this.submitting || !this.name || !this.locationId || !this.type;
+    },
+    ...mapState("location", ["locations"])
   },
   methods: {
     reset() {
+      this.name = null;
       this.locationId = null;
       this.type = null;
     },
@@ -87,6 +105,7 @@ export default {
         .dispatch("gate/create", {
           info: true,
           gate: {
+            name: this.name,
             locationId: this.locationId,
             type: this.type
           }
@@ -99,6 +118,9 @@ export default {
           this.submitting = false;
         });
     }
+  },
+  mounted() {
+    this.$store.dispatch("location/findAll");
   }
 };
 </script>

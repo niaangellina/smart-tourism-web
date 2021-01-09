@@ -16,24 +16,30 @@
         <v-divider inset vertical />
         <v-row>
           <v-col cols="6">
-            <v-text-field
+            <v-select
               v-model="visitorId"
-              label="ID Pengunjung"
+              label="Pengunjung"
+              :items="visitors"
+              item-text="name"
+              item-value="id"
               :disabled="submitting"
               hide-details
               dense
               outlined
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col cols="6">
-            <v-text-field
+            <v-select
               v-model="gateId"
-              label="ID Gate"
+              label="Gate"
+              :items="gates"
+              item-text="name"
+              item-value="id"
               :disabled="submitting"
               hide-details
               dense
               outlined
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col cols="12">
             <v-text-field
@@ -64,6 +70,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "KunjunganAdd",
   data: () => ({
@@ -78,7 +86,9 @@ export default {
       return (
         this.submitting || !this.visitorId || !this.gateId || !this.timestamp
       );
-    }
+    },
+    ...mapState("visitor", ["visitors"]),
+    ...mapState("gate", ["gates"])
   },
   methods: {
     reset() {
@@ -108,6 +118,10 @@ export default {
           this.submitting = false;
         });
     }
+  },
+  mounted() {
+    this.$store.dispatch("visitor/findAll");
+    this.$store.dispatch("gate/findAll");
   }
 };
 </script>

@@ -29,7 +29,9 @@ const location = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { info, location }) {
+    async create({ commit, dispatch }, params) {
+      const { info, location } = params || {};
+
       try {
         const res = await http.post("/api/location", location);
         commit("update", { location: res.data });
@@ -53,7 +55,9 @@ const location = {
         }
       }
     },
-    async findAll({ commit, dispatch }, { info }) {
+    async findAll({ commit, dispatch }, params) {
+      const { info } = params || {};
+
       try {
         const res = await http.get("/api/location");
         commit("replace", { locations: res.data });
@@ -73,7 +77,9 @@ const location = {
         }
       }
     },
-    async remove({ commit, dispatch }, { info, locationId }) {
+    async remove({ commit, dispatch }, params) {
+      const { info, locationId } = params || {};
+
       try {
         const res = await http.delete(`/api/location/${locationId}`);
         commit("remove", { locationId: res.data.id });

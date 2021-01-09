@@ -29,7 +29,9 @@ const gate = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { info, gate }) {
+    async create({ commit, dispatch }, params) {
+      const { info, gate } = params || {};
+
       try {
         const res = await http.post("/api/gate", gate);
         commit("update", { gate: res.data });
@@ -53,7 +55,9 @@ const gate = {
         }
       }
     },
-    async findAll({ commit, dispatch }, { info }) {
+    async findAll({ commit, dispatch }, params) {
+      const { info } = params || {};
+
       try {
         const res = await http.get("/api/gate");
         commit("replace", { gates: res.data });
@@ -73,7 +77,9 @@ const gate = {
         }
       }
     },
-    async remove({ commit, dispatch }, { info, gateId }) {
+    async remove({ commit, dispatch }, params) {
+      const { info, gateId } = params || {};
+
       try {
         const res = await http.delete(`/api/gate/${gateId}`);
         commit("remove", { gateId: res.data.id });

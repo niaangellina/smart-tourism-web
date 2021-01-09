@@ -16,14 +16,17 @@
         <v-divider inset vertical />
         <v-row>
           <v-col cols="6">
-            <v-text-field
+            <v-select
               v-model="cardId"
-              label="ID Kartu"
+              label="Kartu"
+              :items="cards"
+              item-text="tagId"
+              item-value="id"
               :disabled="submitting"
               hide-details
               dense
               outlined
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col cols="6">
             <v-text-field
@@ -77,6 +80,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "VisitorAdd",
   data: () => ({
@@ -100,7 +105,8 @@ export default {
         !this.age ||
         !this.gender
       );
-    }
+    },
+    ...mapState("card", ["cards"])
   },
   methods: {
     reset() {
@@ -132,6 +138,9 @@ export default {
           this.submitting = false;
         });
     }
+  },
+  mounted() {
+    this.$store.dispatch("card/findAll");
   }
 };
 </script>

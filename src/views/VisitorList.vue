@@ -16,6 +16,9 @@
               <VisitorAdd />
             </v-toolbar>
           </template>
+          <template v-slot:[`item.card`]="{ item }">
+            {{ cardTagId(item) }}
+          </template>
           <template v-slot:[`item.gender`]="{ item }">
             {{ genderText(item) }}
           </template>
@@ -43,7 +46,7 @@ export default {
   data: () => ({
     headers: [
       { text: "ID", value: "id" },
-      { text: "ID Kartu", value: "cardId" },
+      { text: "Kartu", value: "card" },
       { text: "Nama", value: "name" },
       { text: "Umur", value: "age" },
       { text: "Jenis Kelamin", value: "gender" },
@@ -51,9 +54,14 @@ export default {
     ]
   }),
   computed: {
-    ...mapState("visitor", ["visitors"])
+    ...mapState("visitor", ["visitors"]),
+    ...mapState("card", ["cards"])
   },
   methods: {
+    cardTagId(item) {
+      const card = this.cards.find(o => o.id === item.cardId) || {};
+      return card.tagId || "-";
+    },
     genderText(item) {
       switch (item.gender) {
         case "male":
@@ -77,7 +85,9 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("visitor/findAll", { info: true });
+    this.$store.dispatch("visitor/findAll", { info: true }).then(() => {
+      this.$store.dispatch("card/findAll");
+    });
   }
 };
 </script>

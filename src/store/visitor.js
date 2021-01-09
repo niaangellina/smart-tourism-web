@@ -29,7 +29,9 @@ const visitor = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { info, visitor }) {
+    async create({ commit, dispatch }, params) {
+      const { info, visitor } = params || {};
+
       try {
         const res = await http.post("/api/visitor", visitor);
         commit("update", { visitor: res.data });
@@ -53,7 +55,9 @@ const visitor = {
         }
       }
     },
-    async findAll({ commit, dispatch }, { info }) {
+    async findAll({ commit, dispatch }, params) {
+      const { info } = params || {};
+
       try {
         const res = await http.get("/api/visitor");
         commit("replace", { visitors: res.data });
@@ -75,7 +79,9 @@ const visitor = {
         }
       }
     },
-    async remove({ commit, dispatch }, { info, visitorId }) {
+    async remove({ commit, dispatch }, params) {
+      const { info, visitorId } = params || {};
+
       try {
         const res = await http.delete(`/api/visitor/${visitorId}`);
         commit("remove", { visitorId: res.data.id });

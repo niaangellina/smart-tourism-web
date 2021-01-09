@@ -16,6 +16,12 @@
               <VisitationAdd />
             </v-toolbar>
           </template>
+          <template v-slot:[`item.visitor`]="{ item }">
+            {{ visitorName(item) }}
+          </template>
+          <template v-slot:[`item.gate`]="{ item }">
+            {{ gateName(item) }}
+          </template>
           <template v-slot:[`item.actions`]="{ item }">
             <v-btn @click="remove(item)" color="error" small>
               <v-icon left>mdi-delete</v-icon> hapus
@@ -40,16 +46,26 @@ export default {
   data: () => ({
     headers: [
       { text: "ID", value: "id" },
-      { text: "ID Pengunjung", value: "visitorId" },
-      { text: "ID Gate", value: "gateId" },
+      { text: "Pengunjung", value: "visitor" },
+      { text: "Gate", value: "gate" },
       { text: "Waktu", value: "timestamp" },
       { text: "Perintah", value: "actions", sortable: false }
     ]
   }),
   computed: {
-    ...mapState("visitation", ["visitations"])
+    ...mapState("visitation", ["visitations"]),
+    ...mapState("visitor", ["visitors"]),
+    ...mapState("gate", ["gates"])
   },
   methods: {
+    visitorName(item) {
+      const visitor = this.visitors.find(o => o.id === item.visitorId) || {};
+      return visitor.name || "-";
+    },
+    gateName(item) {
+      const gate = this.gates.find(o => o.id === item.gateId) || {};
+      return gate.name || "-";
+    },
     remove(visitation) {
       this.$store.dispatch("confirmation/ask", {
         message: `Apakah anda yakin ingin menghapus kunjungan "${visitation.id}"?`,
@@ -63,7 +79,10 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("visitation/findAll", { info: true });
+    this.$store.dispatch("visitation/findAll", { info: true }).then(() => {
+      this.$store.dispatch("visitor/findAll");
+      this.$store.dispatch("gate/findAll");
+    });
   }
 };
 </script>

@@ -16,6 +16,9 @@
               <GateAdd />
             </v-toolbar>
           </template>
+          <template v-slot:[`item.location`]="{ item }">
+            {{ locationName(item) }}
+          </template>
           <template v-slot:[`item.type`]="{ item }">
             {{ typeText(item) }}
           </template>
@@ -43,15 +46,21 @@ export default {
   data: () => ({
     headers: [
       { text: "ID", value: "id" },
-      { text: "ID Lokasi", value: "locationId" },
+      { text: "Nama", value: "name" },
+      { text: "Lokasi", value: "location" },
       { text: "Jenis", value: "type" },
       { text: "Perintah", value: "actions", sortable: false }
     ]
   }),
   computed: {
-    ...mapState("gate", ["gates"])
+    ...mapState("gate", ["gates"]),
+    ...mapState("location", ["locations"])
   },
   methods: {
+    locationName(item) {
+      const location = this.locations.find(o => o.id === item.locationId) || {};
+      return location.name || "-";
+    },
     typeText(item) {
       switch (item.type) {
         case "enter":
@@ -75,7 +84,9 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("gate/findAll", { info: true });
+    this.$store.dispatch("gate/findAll", { info: true }).then(() => {
+      this.$store.dispatch("location/findAll");
+    });
   }
 };
 </script>

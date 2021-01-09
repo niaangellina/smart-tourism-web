@@ -35,6 +35,6 @@
 
 <script>
 export default {
-  name: "Formulir",
+  name: "Formulir"
 };
 </script>

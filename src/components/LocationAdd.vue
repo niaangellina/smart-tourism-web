@@ -20,7 +20,6 @@
               v-model="name"
               label="Nama"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -31,7 +30,6 @@
               v-model="type"
               label="Jenis"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -43,7 +41,6 @@
               label="Sudut Bujur"
               type="number"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -55,7 +52,6 @@
               label="Sudut Lintang"
               type="number"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined

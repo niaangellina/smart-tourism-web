@@ -34,28 +34,20 @@ const location = {
         const res = await http.post("/api/location", location);
         commit("update", { location: res.data });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menambah lokasi" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menambah lokasi", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menambah lokasi, kesalahan server ${err.response.status}`
-            },
+            `Gagal menambah lokasi, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
-          dispatch(
-            "toast/info",
-            { message: "Gagal menambah lokasi, tidak ada jaringan" },
-            { root: true }
-          );
+          dispatch("toast/info", "Gagal menambah lokasi, tidak ada jaringan", {
+            root: true
+          });
         }
 
         throw err;
@@ -71,15 +63,13 @@ const location = {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal mengambil daftar lokasi, kesalahan server ${err.response.status}`
-            },
+            `Gagal mengambil daftar lokasi, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
           dispatch(
             "toast/info",
-            { message: "Gagal mengambil daftar lokasi, tidak ada jaringan" },
+            "Gagal mengambil daftar lokasi, tidak ada jaringan",
             { root: true }
           );
         }
@@ -92,28 +82,20 @@ const location = {
         const res = await http.delete(`/api/location/${locationId}`);
         commit("remove", { locationId: res.data.id });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menghapus lokasi" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menghapus lokasi", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menghapus lokasi, kesalahan server ${err.response.status}`
-            },
+            `Gagal menghapus lokasi, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
-          dispatch(
-            "toast/info",
-            { message: "Gagal menghapus lokasi, tidak ada jaringan" },
-            { root: true }
-          );
+          dispatch("toast/info", "Gagal menghapus lokasi, tidak ada jaringan", {
+            root: true
+          });
         }
 
         throw err;

@@ -18,9 +18,8 @@
           <v-col cols="6">
             <v-text-field
               v-model="tagId"
-              label="Id Tag"
+              label="ID Tag"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -30,8 +29,8 @@
             <v-text-field
               v-model="validityDate"
               label="Tanggal Berlaku"
+              type="date"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -61,12 +60,12 @@ export default {
     dialog: false,
     submitting: false,
     tagId: null,
-    validityDate: null,
+    validityDate: null
   }),
   computed: {
     submitDisabled() {
       return this.submitting || !this.tagId || !this.validityDate;
-    },
+    }
   },
   methods: {
     reset() {
@@ -82,8 +81,8 @@ export default {
         .dispatch("card/create", {
           card: {
             tagId: this.tagId,
-            validityDate: this.validityDate,
-          },
+            validityDate: this.validityDate
+          }
         })
         .then(() => {
           this.close();
@@ -92,7 +91,7 @@ export default {
         .finally(() => {
           this.submitting = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>

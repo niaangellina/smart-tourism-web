@@ -35,32 +35,31 @@ import { mapState } from "vuex";
 export default {
   name: "GateList",
   components: {
-    GateAdd,
+    GateAdd
   },
   data: () => ({
     headers: [
-      { text: "Id", value: "id" },
-      { text: "Id Lokasi", value: "locationId" },
-      { text: "Perintah", value: "actions", sortable: false },
-    ],
+      { text: "ID", value: "id" },
+      { text: "ID Lokasi", value: "locationId" },
+      { text: "Jenis", value: "type" },
+      { text: "Perintah", value: "actions", sortable: false }
+    ]
   }),
   computed: {
-    ...mapState("gate", ["gates"]),
+    ...mapState("gate", ["gates"])
   },
   methods: {
-    remove(item) {
+    remove(gate) {
       this.$store.dispatch("confirmation/ask", {
-        message: `Apakah anda yakin ingin menghapus gate "${item.id}"?`,
+        message: `Apakah anda yakin ingin menghapus gate "${gate.id}"?`,
         callback: () => {
-          return this.$store.dispatch("gate/remove", {
-            gateId: item.id,
-          });
-        },
+          return this.$store.dispatch("gate/remove", { gateId: gate.id });
+        }
       });
-    },
+    }
   },
   mounted() {
     this.$store.dispatch("gate/findAll");
-  },
+  }
 };
 </script>

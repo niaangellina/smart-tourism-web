@@ -35,34 +35,34 @@ import { mapState } from "vuex";
 export default {
   name: "VisitationList",
   components: {
-    VisitationAdd,
+    VisitationAdd
   },
   data: () => ({
     headers: [
-      { text: "Id", value: "id" },
-      { text: "Id Pengunjung", value: "visitorId" },
-      { text: "Id Gate", value: "gateId" },
+      { text: "ID", value: "id" },
+      { text: "ID Pengunjung", value: "visitorId" },
+      { text: "ID Gate", value: "gateId" },
       { text: "Waktu", value: "timestamp" },
-      { text: "Perintah", value: "actions", sortable: false },
-    ],
+      { text: "Perintah", value: "actions", sortable: false }
+    ]
   }),
   computed: {
-    ...mapState("visitation", ["visitations"]),
+    ...mapState("visitation", ["visitations"])
   },
   methods: {
-    remove(item) {
+    remove(visitation) {
       this.$store.dispatch("confirmation/ask", {
-        message: `Apakah anda yakin ingin menghapus visitation "${item.name}"?`,
+        message: `Apakah anda yakin ingin menghapus kunjungan "${visitation.id}"?`,
         callback: () => {
           return this.$store.dispatch("visitation/remove", {
-            visitationId: item.id,
+            visitationId: visitation.id
           });
-        },
+        }
       });
-    },
+    }
   },
   mounted() {
     this.$store.dispatch("visitation/findAll");
-  },
+  }
 };
 </script>

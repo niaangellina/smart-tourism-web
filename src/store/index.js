@@ -12,7 +12,6 @@ import visitation from "./visitation";
 import visitor from "./visitor";
 import card from "./card";
 
-
 export default new Vuex.Store({
   state: {},
   getters: {},
@@ -26,6 +25,6 @@ export default new Vuex.Store({
     toast: toast,
     visitation: visitation,
     visitor: visitor,
-    card: card,
+    card: card
   }
 });

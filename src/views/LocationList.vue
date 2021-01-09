@@ -35,35 +35,35 @@ import { mapState } from "vuex";
 export default {
   name: "LocationList",
   components: {
-    LocationAdd,
+    LocationAdd
   },
   data: () => ({
     headers: [
-      { text: "Id", value: "id" },
+      { text: "ID", value: "id" },
       { text: "Nama", value: "name" },
       { text: "Jenis", value: "type" },
       { text: "Sudut Bujur", value: "longitude" },
       { text: "Sudut Lintang", value: "latitude" },
-      { text: "Perintah", value: "actions", sortable: false },
-    ],
+      { text: "Perintah", value: "actions", sortable: false }
+    ]
   }),
   computed: {
-    ...mapState("location", ["locations"]),
+    ...mapState("location", ["locations"])
   },
   methods: {
-    remove(item) {
+    remove(location) {
       this.$store.dispatch("confirmation/ask", {
-        message: `Apakah anda yakin ingin menghapus lokasi "${item.name}"?`,
+        message: `Apakah anda yakin ingin menghapus lokasi "${location.name}"?`,
         callback: () => {
           return this.$store.dispatch("location/remove", {
-            locationId: item.id,
+            locationId: location.id
           });
-        },
+        }
       });
-    },
+    }
   },
   mounted() {
     this.$store.dispatch("location/findAll");
-  },
+  }
 };
 </script>

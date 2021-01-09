@@ -18,9 +18,8 @@
           <v-col cols="6">
             <v-text-field
               v-model="visitorId"
-              label="Id Visitor"
+              label="ID Pengunjung"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -29,20 +28,19 @@
           <v-col cols="6">
             <v-text-field
               v-model="gateId"
-              label="Id Gate"
+              label="ID Gate"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model="timestamp"
               label="Waktu"
+              type="datetime-local"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -73,14 +71,14 @@ export default {
     submitting: false,
     visitorId: null,
     gateId: null,
-    timestamp: null,
+    timestamp: null
   }),
   computed: {
     submitDisabled() {
       return (
         this.submitting || !this.visitorId || !this.gateId || !this.timestamp
       );
-    },
+    }
   },
   methods: {
     reset() {
@@ -98,8 +96,8 @@ export default {
           visitation: {
             visitorId: this.visitorId,
             gateId: this.gateId,
-            timestamp: this.timestamp,
-          },
+            timestamp: this.timestamp
+          }
         })
         .then(() => {
           this.close();
@@ -108,7 +106,7 @@ export default {
         .finally(() => {
           this.submitting = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>

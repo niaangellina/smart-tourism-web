@@ -35,33 +35,31 @@ import { mapState } from "vuex";
 export default {
   name: "CardList",
   components: {
-    CardAdd,
+    CardAdd
   },
   data: () => ({
     headers: [
-      { text: "Id", value: "id" },
-      { text: "Id Tag", value: "tagId" },
+      { text: "ID", value: "id" },
+      { text: "ID Tag", value: "tagId" },
       { text: "Tanggal Berlaku", value: "validityDate" },
-      { text: "Perintah", value: "actions", sortable: false },
-    ],
+      { text: "Perintah", value: "actions", sortable: false }
+    ]
   }),
   computed: {
-    ...mapState("card", ["cards"]),
+    ...mapState("card", ["cards"])
   },
   methods: {
-    remove(item) {
+    remove(card) {
       this.$store.dispatch("confirmation/ask", {
-        message: `Apakah anda yakin ingin menghapus card "${item.id}"?`,
+        message: `Apakah anda yakin ingin menghapus kartu "${card.id}"?`,
         callback: () => {
-          return this.$store.dispatch("card/remove", {
-            cardId: item.id,
-          });
-        },
+          return this.$store.dispatch("card/remove", { cardId: card.id });
+        }
       });
-    },
+    }
   },
   mounted() {
     this.$store.dispatch("card/findAll");
-  },
+  }
 };
 </script>

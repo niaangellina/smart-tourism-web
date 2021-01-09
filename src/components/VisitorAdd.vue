@@ -17,10 +17,19 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
+              v-model="cardId"
+              label="ID Kartu"
+              :disabled="submitting"
+              hide-details
+              dense
+              outlined
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
               v-model="name"
               label="Nama"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -32,7 +41,6 @@
               label="Umur"
               type="number"
               :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -43,18 +51,6 @@
               v-model="gender"
               label="Jenis Kelamin"
               :disabled="submitting"
-              clearable
-              hide-details
-              dense
-              outlined
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-model="city"
-              label="Asal"
-              :disabled="submitting"
-              clearable
               hide-details
               dense
               outlined
@@ -83,24 +79,28 @@ export default {
   data: () => ({
     dialog: false,
     submitting: false,
+    cardId: null,
     name: null,
     age: null,
-    gender: null,
-    city: null,
+    gender: null
   }),
   computed: {
     submitDisabled() {
       return (
-        this.submitting || !this.name || !this.age || !this.gender || !this.city
+        this.submitting ||
+        !this.cardId ||
+        !this.name ||
+        !this.age ||
+        !this.gender
       );
-    },
+    }
   },
   methods: {
     reset() {
+      this.cardId = null;
       this.name = null;
       this.age = null;
       this.gender = null;
-      this.city = null;
     },
     close() {
       this.dialog = false;
@@ -110,11 +110,11 @@ export default {
       this.$store
         .dispatch("visitor/create", {
           visitor: {
+            cardId: this.cardId,
             name: this.name,
             age: this.age,
-            gender: this.gender,
-            city: this.city,
-          },
+            gender: this.gender
+          }
         })
         .then(() => {
           this.close();
@@ -123,7 +123,7 @@ export default {
         .finally(() => {
           this.submitting = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>

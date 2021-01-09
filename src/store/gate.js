@@ -34,28 +34,20 @@ const gate = {
         const res = await http.post("/api/gate", gate);
         commit("update", { gate: res.data });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menambah gate" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menambah gate", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menambah gate, kesalahan server ${err.response.status}`
-            },
+            `Gagal menambah gate, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
-          dispatch(
-            "toast/info",
-            { message: "Gagal menambah gate, tidak ada jaringan" },
-            { root: true }
-          );
+          dispatch("toast/info", "Gagal menambah gate, tidak ada jaringan", {
+            root: true
+          });
         }
 
         throw err;
@@ -71,15 +63,13 @@ const gate = {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal mengambil daftar gate, kesalahan server ${err.response.status}`
-            },
+            `Gagal mengambil daftar gate, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
           dispatch(
             "toast/info",
-            { message: "Gagal mengambil daftar gate, tidak ada jaringan" },
+            "Gagal mengambil daftar gate, tidak ada jaringan",
             { root: true }
           );
         }
@@ -92,28 +82,20 @@ const gate = {
         const res = await http.delete(`/api/gate/${gateId}`);
         commit("remove", { gateId: res.data.id });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menghapus gate" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menghapus gate", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menghapus gate, kesalahan server ${err.response.status}`
-            },
+            `Gagal menghapus gate, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
-          dispatch(
-            "toast/info",
-            { message: "Gagal menghapus gate, tidak ada jaringan" },
-            { root: true }
-          );
+          dispatch("toast/info", "Gagal menghapus gate, tidak ada jaringan", {
+            root: true
+          });
         }
 
         throw err;

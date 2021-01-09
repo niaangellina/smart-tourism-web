@@ -15,12 +15,21 @@
       <v-card-text>
         <v-divider inset vertical />
         <v-row>
-          <v-col cols="12">
+          <v-col cols="6">
             <v-text-field
               v-model="locationId"
-              label="Id Lokasi"
+              label="ID Lokasi"
               :disabled="submitting"
-              clearable
+              hide-details
+              dense
+              outlined
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model="type"
+              label="Jenis"
+              :disabled="submitting"
               hide-details
               dense
               outlined
@@ -50,15 +59,17 @@ export default {
     dialog: false,
     submitting: false,
     locationId: null,
+    type: null
   }),
   computed: {
     submitDisabled() {
-      return this.submitting || !this.locationId;
-    },
+      return this.submitting || !this.locationId || !this.type;
+    }
   },
   methods: {
     reset() {
       this.locationId = null;
+      this.type = null;
     },
     close() {
       this.dialog = false;
@@ -69,7 +80,8 @@ export default {
         .dispatch("gate/create", {
           gate: {
             locationId: this.locationId,
-          },
+            type: this.type
+          }
         })
         .then(() => {
           this.close();
@@ -78,7 +90,7 @@ export default {
         .finally(() => {
           this.submitting = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>

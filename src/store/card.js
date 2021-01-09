@@ -34,28 +34,20 @@ const card = {
         const res = await http.post("/api/card", card);
         commit("update", { card: res.data });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menambah card" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menambah kartu", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menambah card, kesalahan server ${err.response.status}`
-            },
+            `Gagal menambah kartu, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
-          dispatch(
-            "toast/info",
-            { message: "Gagal menambah card, tidak ada jaringan" },
-            { root: true }
-          );
+          dispatch("toast/info", "Gagal menambah kartu, tidak ada jaringan", {
+            root: true
+          });
         }
 
         throw err;
@@ -71,15 +63,13 @@ const card = {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal mengambil daftar card, kesalahan server ${err.response.status}`
-            },
+            `Gagal mengambil daftar kartu, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
           dispatch(
             "toast/info",
-            { message: "Gagal mengambil daftar card, tidak ada jaringan" },
+            "Gagal mengambil daftar kartu, tidak ada jaringan",
             { root: true }
           );
         }
@@ -92,28 +82,20 @@ const card = {
         const res = await http.delete(`/api/card/${cardId}`);
         commit("remove", { cardId: res.data.id });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menghapus card" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menghapus kartu", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menghapus card, kesalahan server ${err.response.status}`
-            },
+            `Gagal menghapus kartu, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
-          dispatch(
-            "toast/info",
-            { message: "Gagal menghapus card, tidak ada jaringan" },
-            { root: true }
-          );
+          dispatch("toast/info", "Gagal menghapus kartu, tidak ada jaringan", {
+            root: true
+          });
         }
 
         throw err;

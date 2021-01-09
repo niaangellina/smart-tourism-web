@@ -34,26 +34,20 @@ const visitation = {
         const res = await http.post("/api/visitation", visitation);
         commit("update", { visitation: res.data });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menambah kunjungan" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menambah kunjungan", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menambah kunjungan, kesalahan server ${err.response.status}`
-            },
+            `Gagal menambah kunjungan, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
           dispatch(
             "toast/info",
-            { message: "Gagal menambah kunjungan, tidak ada jaringan" },
+            "Gagal menambah kunjungan, tidak ada jaringan",
             { root: true }
           );
         }
@@ -71,15 +65,13 @@ const visitation = {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal mengambil daftar kunjungan, kesalahan server ${err.response.status}`
-            },
+            `Gagal mengambil daftar kunjungan, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
           dispatch(
             "toast/info",
-            { message: "Gagal mengambil daftar kunjungan, tidak ada jaringan" },
+            "Gagal mengambil daftar kunjungan, tidak ada jaringan",
             { root: true }
           );
         }
@@ -92,26 +84,20 @@ const visitation = {
         const res = await http.delete(`/api/visitation/${visitationId}`);
         commit("remove", { visitationId: res.data.id });
 
-        dispatch(
-          "toast/info",
-          { message: "Sukses menghapus kunjungan" },
-          { root: true }
-        );
+        dispatch("toast/info", "Sukses menghapus kunjungan", { root: true });
 
         return res.data;
       } catch (err) {
         if (err.response) {
           dispatch(
             "toast/info",
-            {
-              message: `Gagal menghapus kunjungan, kesalahan server ${err.response.status}`
-            },
+            `Gagal menghapus kunjungan, kesalahan server ${err.response.status}`,
             { root: true }
           );
         } else {
           dispatch(
             "toast/info",
-            { message: "Gagal menghapus kunjungan, tidak ada jaringan" },
+            "Gagal menghapus kunjungan, tidak ada jaringan",
             { root: true }
           );
         }

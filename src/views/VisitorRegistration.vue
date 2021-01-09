@@ -57,11 +57,7 @@
                 </v-col>
               </v-col>
               <v-col>
-                <v-img
-                  src="https://picsum.photos/id/0/300/300"
-                  max-width="500"
-                  max-height="300"
-                ></v-img>
+                <QrScanner />
               </v-col>
             </v-row>
           </v-card-text>
@@ -72,10 +68,15 @@
 </template>
 
 <script>
+import QrScanner from "../components/QrScanner";
+import { mapState } from "vuex";
 import "../plugins/utility";
 
 export default {
   name: "VisitorRegistration",
+  components: {
+    QrScanner
+  },
   data: () => ({
     submitting: false,
     tagId: null,
@@ -96,6 +97,19 @@ export default {
         !this.age ||
         !this.gender
       );
+    },
+    ...mapState("qrScanner", ["data"])
+  },
+  watch: {
+    data(newData) {
+      if (newData) {
+        this.$store.dispatch("toast/info", `Kode QR "${newData}" terdeteksi`);
+        this.tagId = newData;
+
+        setTimeout(() => {
+          this.$store.dispatch("qrScanner/enable");
+        }, 3000);
+      }
     }
   },
   methods: {
@@ -107,11 +121,13 @@ export default {
     },
     submit() {
       this.submitting = true;
+      const now = new Date();
+
       this.$store
         .dispatch("card/create", {
           card: {
             tagId: this.tagId,
-            validityDate: (new Date()).toDateInput()
+            validityDate: now.toDateInput()
           }
         })
         .then(card => {
@@ -159,6 +175,9 @@ export default {
           this.submitting = false;
         });
     }
+  },
+  mounted() {
+    this.$store.dispatch("qrScanner/enable");
   }
 };
 </script>

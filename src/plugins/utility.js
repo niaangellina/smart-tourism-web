@@ -1,11 +1,11 @@
 Number.prototype.pad = function(size) {
   var str = String(this);
   while (str.length < (size || 2)) {
-    str = '0' + str;
+    str = "0" + str;
   }
 
   return str;
-}
+};
 
 Date.prototype.toDateInput = function() {
   let year = this.getFullYear();

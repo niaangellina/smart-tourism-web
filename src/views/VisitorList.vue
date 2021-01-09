@@ -56,9 +56,12 @@ export default {
   methods: {
     genderText(item) {
       switch (item.gender) {
-        case "male": return "Laki-laki";
-        case "female": return "Perempuan";
-        default: return "-";
+        case "male":
+          return "Laki-laki";
+        case "female":
+          return "Perempuan";
+        default:
+          return "-";
       }
     },
     remove(visitor) {

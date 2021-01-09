@@ -13,6 +13,11 @@ const navigation = {
         path: "/visitor-registration"
       },
       {
+        title: "Statistik lokasi",
+        icon: "mdi-chart-areaspline",
+        path: "/location-statistic"
+      },
+      {
         title: "Daftar Kartu",
         icon: "mdi-view-list",
         path: "/card"

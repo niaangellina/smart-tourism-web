@@ -26,14 +26,17 @@
             ></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-text-field
+            <v-select
               v-model="type"
               label="Jenis"
+              :items="types"
+              item-text="text"
+              item-value="value"
               :disabled="submitting"
               hide-details
               dense
               outlined
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col cols="12">
             <v-btn
@@ -59,7 +62,11 @@ export default {
     dialog: false,
     submitting: false,
     locationId: null,
-    type: null
+    type: null,
+    types: [
+      { text: "Masuk", value: "enter" },
+      { text: "Keluar", value: "exit" }
+    ]
   }),
   computed: {
     submitDisabled() {

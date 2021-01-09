@@ -16,6 +16,9 @@
               <GateAdd />
             </v-toolbar>
           </template>
+          <template v-slot:[`item.type`]="{ item }">
+            {{ typeText(item) }}
+          </template>
           <template v-slot:[`item.actions`]="{ item }">
             <v-btn @click="remove(item)" color="error" small>
               <v-icon left>mdi-delete</v-icon> hapus
@@ -49,6 +52,16 @@ export default {
     ...mapState("gate", ["gates"])
   },
   methods: {
+    typeText(item) {
+      switch (item.type) {
+        case "enter":
+          return "Masuk";
+        case "exit":
+          return "Keluar";
+        default:
+          return "-";
+      }
+    },
     remove(gate) {
       this.$store.dispatch("confirmation/ask", {
         message: `Apakah anda yakin ingin menghapus gate "${gate.id}"?`,

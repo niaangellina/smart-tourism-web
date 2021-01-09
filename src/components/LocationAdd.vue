@@ -26,14 +26,17 @@
             ></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-text-field
+            <v-select
               v-model="type"
               label="Jenis"
+              :items="types"
+              item-text="text"
+              item-value="value"
               :disabled="submitting"
               hide-details
               dense
               outlined
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col cols="6">
             <v-text-field
@@ -82,6 +85,16 @@ export default {
     submitting: false,
     name: null,
     type: null,
+    types: [
+      { text: "Informasi", value: "information" },
+      { text: "Galeri", value: "gallery" },
+      { text: "Taman", value: "garden" },
+      { text: "Wahana", value: "rides" },
+      { text: "Tempat Parkir", value: "parking_area" },
+      { text: "Toilet", value: "Restroom" },
+      { text: "Toko Suvernir", value: "gift_shop" },
+      { text: "Tempat Makan", value: "food_court" }
+    ],
     longitude: null,
     latitude: null
   }),

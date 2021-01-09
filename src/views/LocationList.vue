@@ -16,6 +16,9 @@
               <LocationAdd />
             </v-toolbar>
           </template>
+          <template v-slot:[`item.type`]="{ item }">
+            {{ typeText(item) }}
+          </template>
           <template v-slot:[`item.actions`]="{ item }">
             <v-btn @click="remove(item)" color="error" small>
               <v-icon left>mdi-delete</v-icon> hapus
@@ -51,6 +54,28 @@ export default {
     ...mapState("location", ["locations"])
   },
   methods: {
+    typeText(item) {
+      switch (item.type) {
+        case "information":
+          return "Informasi";
+        case "gallery":
+          return "Galeri";
+        case "garden":
+          return "Taman";
+        case "rides":
+          return "Wahana";
+        case "parking_area":
+          return "Tempat Parkir";
+        case "Restroom":
+          return "Toilet";
+        case "gift_shop":
+          return "Toko Suvernir";
+        case "food_court":
+          return "Tempat Makan";
+        default:
+          return "-";
+      }
+    },
     remove(location) {
       this.$store.dispatch("confirmation/ask", {
         message: `Apakah anda yakin ingin menghapus lokasi "${location.name}"?`,

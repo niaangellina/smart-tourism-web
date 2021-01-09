@@ -29,76 +29,72 @@ const location = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { location }) {
+    async create({ commit, dispatch }, { info, location }) {
       try {
         const res = await http.post("/api/location", location);
         commit("update", { location: res.data });
 
-        dispatch("toast/info", "Sukses menambah lokasi", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menambah lokasi", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menambah lokasi, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch("toast/info", "Gagal menambah lokasi, tidak ada jaringan", {
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
+
+          dispatch("toast/info", `Gagal menambah lokasi, ${errInfo}`, {
             root: true
           });
+        } else {
+          throw err;
         }
-
-        throw err;
       }
     },
-    async findAll({ commit, dispatch }) {
+    async findAll({ commit, dispatch }, { info }) {
       try {
         const res = await http.get("/api/location");
         commit("replace", { locations: res.data });
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal mengambil daftar lokasi, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch(
-            "toast/info",
-            "Gagal mengambil daftar lokasi, tidak ada jaringan",
-            { root: true }
-          );
-        }
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
 
-        throw err;
+          dispatch("toast/info", `Gagal mengambil daftar lokasi, ${errInfo}`, {
+            root: true
+          });
+        } else {
+          throw err;
+        }
       }
     },
-    async remove({ commit, dispatch }, { locationId }) {
+    async remove({ commit, dispatch }, { info, locationId }) {
       try {
         const res = await http.delete(`/api/location/${locationId}`);
         commit("remove", { locationId: res.data.id });
 
-        dispatch("toast/info", "Sukses menghapus lokasi", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menghapus lokasi", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menghapus lokasi, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch("toast/info", "Gagal menghapus lokasi, tidak ada jaringan", {
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
+
+          dispatch("toast/info", `Gagal menghapus lokasi, ${errInfo}`, {
             root: true
           });
+        } else {
+          throw err;
         }
-
-        throw err;
       }
     }
   }

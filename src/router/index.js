@@ -11,9 +11,9 @@ const routes = [
     component: () => import("../views/LocationList")
   },
   {
-    path: "/formulir",
-    name: "Formulir",
-    component: () => import("../views/Formulir")
+    path: "/visitor-registration",
+    name: "VisitorRegistration",
+    component: () => import("../views/VisitorRegistration")
   },
   {
     path: "/gate",

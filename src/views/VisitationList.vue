@@ -55,6 +55,7 @@ export default {
         message: `Apakah anda yakin ingin menghapus kunjungan "${visitation.id}"?`,
         callback: () => {
           return this.$store.dispatch("visitation/remove", {
+            info: true,
             visitationId: visitation.id
           });
         }
@@ -62,7 +63,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("visitation/findAll");
+    this.$store.dispatch("visitation/findAll", { info: true });
   }
 };
 </script>

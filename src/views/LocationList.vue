@@ -56,6 +56,7 @@ export default {
         message: `Apakah anda yakin ingin menghapus lokasi "${location.name}"?`,
         callback: () => {
           return this.$store.dispatch("location/remove", {
+            info: true,
             locationId: location.id
           });
         }
@@ -63,7 +64,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("location/findAll");
+    this.$store.dispatch("location/findAll", { info: true });
   }
 };
 </script>

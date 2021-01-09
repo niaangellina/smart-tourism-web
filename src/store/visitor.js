@@ -29,80 +29,74 @@ const visitor = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { visitor }) {
+    async create({ commit, dispatch }, { info, visitor }) {
       try {
         const res = await http.post("/api/visitor", visitor);
         commit("update", { visitor: res.data });
 
-        dispatch("toast/info", "Sukses menambah pengunjung", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menambah pengunjung", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menambah pengunjung, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch(
-            "toast/info",
-            "Gagal menambah pengunjung, tidak ada jaringan",
-            { root: true }
-          );
-        }
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
 
-        throw err;
+          dispatch("toast/info", `Gagal menambah pengunjung, ${errInfo}`, {
+            root: true
+          });
+        } else {
+          throw err;
+        }
       }
     },
-    async findAll({ commit, dispatch }) {
+    async findAll({ commit, dispatch }, { info }) {
       try {
         const res = await http.get("/api/visitor");
         commit("replace", { visitors: res.data });
 
         return res.data;
       } catch (err) {
-        if (err.response) {
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
+
           dispatch(
             "toast/info",
-            `Gagal mengambil daftar pengunjung, kesalahan server ${err.response.status}`,
+            `Gagal mengambil daftar pengunjung, ${errInfo}`,
             { root: true }
           );
         } else {
-          dispatch(
-            "toast/info",
-            "Gagal mengambil daftar pengunjung, tidak ada jaringan",
-            { root: true }
-          );
+          throw err;
         }
-
-        throw err;
       }
     },
-    async remove({ commit, dispatch }, { visitorId }) {
+    async remove({ commit, dispatch }, { info, visitorId }) {
       try {
         const res = await http.delete(`/api/visitor/${visitorId}`);
         commit("remove", { visitorId: res.data.id });
 
-        dispatch("toast/info", "Sukses menghapus pengunjung", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menghapus pengunjung", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menghapus pengunjung, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch(
-            "toast/info",
-            "Gagal menghapus pengunjung, tidak ada jaringan",
-            { root: true }
-          );
-        }
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
 
-        throw err;
+          dispatch("toast/info", `Gagal menghapus pengunjung, ${errInfo}`, {
+            root: true
+          });
+        } else {
+          throw err;
+        }
       }
     }
   }

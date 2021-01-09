@@ -53,13 +53,16 @@ export default {
       this.$store.dispatch("confirmation/ask", {
         message: `Apakah anda yakin ingin menghapus gate "${gate.id}"?`,
         callback: () => {
-          return this.$store.dispatch("gate/remove", { gateId: gate.id });
+          return this.$store.dispatch("gate/remove", {
+            info: true,
+            gateId: gate.id
+          });
         }
       });
     }
   },
   mounted() {
-    this.$store.dispatch("gate/findAll");
+    this.$store.dispatch("gate/findAll", { info: true });
   }
 };
 </script>

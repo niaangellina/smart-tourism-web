@@ -47,14 +47,17 @@
             ></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-text-field
+            <v-select
               v-model="gender"
               label="Jenis Kelamin"
+              :items="genders"
+              item-text="text"
+              item-value="value"
               :disabled="submitting"
               hide-details
               dense
               outlined
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col cols="12">
             <v-btn
@@ -82,7 +85,11 @@ export default {
     cardId: null,
     name: null,
     age: null,
-    gender: null
+    gender: null,
+    genders: [
+      { text: "Laki-laki", value: "male" },
+      { text: "Perempuan", value: "female" }
+    ]
   }),
   computed: {
     submitDisabled() {
@@ -109,6 +116,7 @@ export default {
       this.submitting = true;
       this.$store
         .dispatch("visitor/create", {
+          info: true,
           visitor: {
             cardId: this.cardId,
             name: this.name,

@@ -29,76 +29,72 @@ const card = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { card }) {
+    async create({ commit, dispatch }, { info, card }) {
       try {
         const res = await http.post("/api/card", card);
         commit("update", { card: res.data });
 
-        dispatch("toast/info", "Sukses menambah kartu", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menambah kartu", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menambah kartu, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch("toast/info", "Gagal menambah kartu, tidak ada jaringan", {
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
+
+          dispatch("toast/info", `Gagal menambah kartu, ${errInfo}`, {
             root: true
           });
+        } else {
+          throw err;
         }
-
-        throw err;
       }
     },
-    async findAll({ commit, dispatch }) {
+    async findAll({ commit, dispatch }, { info }) {
       try {
         const res = await http.get("/api/card");
         commit("replace", { cards: res.data });
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal mengambil daftar kartu, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch(
-            "toast/info",
-            "Gagal mengambil daftar kartu, tidak ada jaringan",
-            { root: true }
-          );
-        }
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
 
-        throw err;
+          dispatch("toast/info", `Gagal mengambil daftar kartu, ${errInfo}`, {
+            root: true
+          });
+        } else {
+          throw err;
+        }
       }
     },
-    async remove({ commit, dispatch }, { cardId }) {
+    async remove({ commit, dispatch }, { info, cardId }) {
       try {
         const res = await http.delete(`/api/card/${cardId}`);
         commit("remove", { cardId: res.data.id });
 
-        dispatch("toast/info", "Sukses menghapus kartu", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menghapus kartu", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menghapus kartu, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch("toast/info", "Gagal menghapus kartu, tidak ada jaringan", {
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
+
+          dispatch("toast/info", `Gagal menghapus kartu, ${errInfo}`, {
             root: true
           });
+        } else {
+          throw err;
         }
-
-        throw err;
       }
     }
   }

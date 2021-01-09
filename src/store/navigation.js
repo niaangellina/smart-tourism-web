@@ -8,9 +8,9 @@ const navigation = {
     },
     routes: [
       {
-        title: "Formulir",
-        icon: "mdi-view-list",
-        path: "/formulir"
+        title: "Registrasi Pengunjung",
+        icon: "mdi-file-edit",
+        path: "/visitor-registration"
       },
       {
         title: "Daftar Kartu",

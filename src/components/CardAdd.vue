@@ -79,6 +79,7 @@ export default {
       this.submitting = true;
       this.$store
         .dispatch("card/create", {
+          info: true,
           card: {
             tagId: this.tagId,
             validityDate: this.validityDate

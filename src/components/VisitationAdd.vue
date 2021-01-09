@@ -93,6 +93,7 @@ export default {
       this.submitting = true;
       this.$store
         .dispatch("visitation/create", {
+          info: true,
           visitation: {
             visitorId: this.visitorId,
             gateId: this.gateId,

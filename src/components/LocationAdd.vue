@@ -110,6 +110,7 @@ export default {
       this.submitting = true;
       this.$store
         .dispatch("location/create", {
+          info: true,
           location: {
             name: this.name,
             type: this.type,

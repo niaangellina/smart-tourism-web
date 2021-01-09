@@ -78,6 +78,7 @@ export default {
       this.submitting = true;
       this.$store
         .dispatch("gate/create", {
+          info: true,
           gate: {
             locationId: this.locationId,
             type: this.type

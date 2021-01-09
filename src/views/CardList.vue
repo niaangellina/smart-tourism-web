@@ -53,13 +53,16 @@ export default {
       this.$store.dispatch("confirmation/ask", {
         message: `Apakah anda yakin ingin menghapus kartu "${card.id}"?`,
         callback: () => {
-          return this.$store.dispatch("card/remove", { cardId: card.id });
+          return this.$store.dispatch("card/remove", {
+            info: true,
+            cardId: card.id
+          });
         }
       });
     }
   },
   mounted() {
-    this.$store.dispatch("card/findAll");
+    this.$store.dispatch("card/findAll", { info: true });
   }
 };
 </script>

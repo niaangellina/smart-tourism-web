@@ -16,6 +16,9 @@
               <VisitorAdd />
             </v-toolbar>
           </template>
+          <template v-slot:[`item.gender`]="{ item }">
+            {{ genderText(item) }}
+          </template>
           <template v-slot:[`item.actions`]="{ item }">
             <v-btn @click="remove(item)" color="error" small>
               <v-icon left>mdi-delete</v-icon> hapus
@@ -51,11 +54,19 @@ export default {
     ...mapState("visitor", ["visitors"])
   },
   methods: {
+    genderText(item) {
+      switch (item.gender) {
+        case "male": return "Laki-laki";
+        case "female": return "Perempuan";
+        default: return "-";
+      }
+    },
     remove(visitor) {
       this.$store.dispatch("confirmation/ask", {
         message: `Apakah anda yakin ingin menghapus pengunjung "${visitor.name}"?`,
         callback: () => {
           return this.$store.dispatch("visitor/remove", {
+            info: true,
             visitorId: visitor.id
           });
         }
@@ -63,7 +74,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("visitor/findAll");
+    this.$store.dispatch("visitor/findAll", { info: true });
   }
 };
 </script>

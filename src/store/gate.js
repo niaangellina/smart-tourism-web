@@ -29,76 +29,72 @@ const gate = {
     }
   },
   actions: {
-    async create({ commit, dispatch }, { gate }) {
+    async create({ commit, dispatch }, { info, gate }) {
       try {
         const res = await http.post("/api/gate", gate);
         commit("update", { gate: res.data });
 
-        dispatch("toast/info", "Sukses menambah gate", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menambah gate", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menambah gate, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch("toast/info", "Gagal menambah gate, tidak ada jaringan", {
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
+
+          dispatch("toast/info", `Gagal menambah gate, ${errInfo}`, {
             root: true
           });
+        } else {
+          throw err;
         }
-
-        throw err;
       }
     },
-    async findAll({ commit, dispatch }) {
+    async findAll({ commit, dispatch }, { info }) {
       try {
         const res = await http.get("/api/gate");
         commit("replace", { gates: res.data });
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal mengambil daftar gate, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch(
-            "toast/info",
-            "Gagal mengambil daftar gate, tidak ada jaringan",
-            { root: true }
-          );
-        }
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
 
-        throw err;
+          dispatch("toast/info", `Gagal mengambil daftar gate, ${errInfo}`, {
+            root: true
+          });
+        } else {
+          throw err;
+        }
       }
     },
-    async remove({ commit, dispatch }, { gateId }) {
+    async remove({ commit, dispatch }, { info, gateId }) {
       try {
         const res = await http.delete(`/api/gate/${gateId}`);
         commit("remove", { gateId: res.data.id });
 
-        dispatch("toast/info", "Sukses menghapus gate", { root: true });
+        if (info) {
+          dispatch("toast/info", "Sukses menghapus gate", { root: true });
+        }
 
         return res.data;
       } catch (err) {
-        if (err.response) {
-          dispatch(
-            "toast/info",
-            `Gagal menghapus gate, kesalahan server ${err.response.status}`,
-            { root: true }
-          );
-        } else {
-          dispatch("toast/info", "Gagal menghapus gate, tidak ada jaringan", {
+        if (info) {
+          const errInfo = err.response
+            ? `kesalahan server ${err.response.status}`
+            : "tidak ada jaringan";
+
+          dispatch("toast/info", `Gagal menghapus gate, ${errInfo}`, {
             root: true
           });
+        } else {
+          throw err;
         }
-
-        throw err;
       }
     }
   }

@@ -87,6 +87,11 @@ export default {
         this.video.setAttribute("playsinline", true);
         this.video.play();
         requestAnimationFrame(this.tick);
+      })
+      .catch(err => {
+        this.$store.dispatch("toast/info", `Kamera tidak tersedia, ${err}`, {
+          root: true
+        });
       });
   }
 };

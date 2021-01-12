@@ -44,105 +44,145 @@ export default {
     ...mapState("visitation", ["visitations"]),
     ...mapState("gate", ["gates"])
   },
-  watch: {
-    locationId(newData) {
-      if (newData) {
-        const dictionary = {};
-        for (let i = 0; i < 7; ++i) {
-          const date = new Date();
-          date.setDate(date.getDate() - i);
+  methods: {
+    updateChart() {
+      let dictionary = {};
 
-          const dateInput = date.toDateInput();
-          for (const visitor of this.visitors) {
-            const card = this.cards.find(o => o.id === visitor.cardId) || {};
-            if (card.validityDate === dateInput) {
-              const visitorVisitations = [];
-              for (const visitation of this.visitations) {
-                if (visitation.visitorId === visitor.id) {
-                  const gate =
-                    this.gates.find(o => o.id === visitation.gateId) || {};
-                  if (gate.locationId === this.locationId) {
-                    visitation.type = gate.type;
-                    visitorVisitations.push(visitation);
-                  }
+      const dictionaryAdd = (date, val) => {
+        const key = date.toDateTimeInput();
+        if (key in dictionary) {
+          dictionary[key] += val;
+        } else {
+          dictionary[key] = val;
+        }
+      };
+
+      let startDate = new Date();
+      startDate.setDate(startDate.getDate() - 6);
+      startDate.setMinutes(0);
+      dictionary[startDate.toDateTimeInput()] = 0;
+
+      let endDate = new Date();
+      endDate.setMinutes(0);
+      dictionary[endDate.toDateTimeInput()] = 0;
+
+      for (let i = 0; i < 6; ++i) {
+        let date = new Date();
+        date.setDate(date.getDate() - i);
+
+        const dateInput = date.toDateInput();
+        for (const visitor of this.visitors) {
+          const card = this.cards.find(o => o.id === visitor.cardId) || {};
+          if (card.validityDate === dateInput) {
+            const visitorVisitations = [];
+            for (const visitation of this.visitations) {
+              if (visitation.visitorId === visitor.id) {
+                const gate =
+                  this.gates.find(o => o.id === visitation.gateId) || {};
+                if (gate.locationId === this.locationId) {
+                  visitation.type = gate.type;
+                  visitorVisitations.push(visitation);
                 }
               }
+            }
 
-              visitorVisitations.sort((a, b) => {
-                if (a.timestamp < b.timestamp) {
-                  return -1;
-                } else if (a.timestamp > b.timestamp) {
-                  return 1;
+            visitorVisitations.sort((a, b) => {
+              if (a.timestamp < b.timestamp) {
+                return -1;
+              } else if (a.timestamp > b.timestamp) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+
+            const calculateVisitation = (start, end) => {
+              let time = new Date(start.timestamp);
+              time.setMinutes(0);
+
+              time.setHours(time.getHours() - 1);
+              dictionaryAdd(time, 0);
+              time.setHours(time.getHours() + 1);
+
+              let endTime = new Date(end.timestamp);
+              endTime.setMinutes(0);
+              while (time.getHours() <= endTime.getHours()) {
+                dictionaryAdd(time, 1);
+                time.setHours(time.getHours() + 1);
+              }
+
+              endTime.setHours(endTime.getHours() + 1);
+              dictionaryAdd(endTime, 0);
+            };
+
+            let prevVisitation = null;
+            for (const visitation of visitorVisitations) {
+              let time = new Date(visitation.timestamp);
+              if (time < startDate || time > endDate) {
+                continue;
+              }
+
+              if (visitation.type === "enter") {
+                if (prevVisitation) {
+                  calculateVisitation(prevVisitation, visitation);
+                  prevVisitation = visitation;
                 } else {
-                  return 0;
+                  prevVisitation = visitation;
                 }
-              });
-
-              const calculateVisitation = (start, end) => {
-                let time = new Date(start.timestamp);
-                time.setMinutes(0);
-
-                const endTime = new Date(end.timestamp);
-                while (time.getHours() <= endTime.getHours()) {
-                  const key = time.toDateTimeInput();
-                  if (key in dictionary) {
-                    dictionary[key] += 1;
-                  } else {
-                    dictionary[key] = 1;
-                  }
-
-                  time.setHours(time.getHours() + 1);
-                }
-              };
-
-              let prevVisitation = null;
-              for (const visitation of visitorVisitations) {
-                if (visitation.type === "enter") {
-                  if (prevVisitation) {
+              } else {
+                if (prevVisitation) {
+                  if (prevVisitation.type === "enter") {
                     calculateVisitation(prevVisitation, visitation);
-                    prevVisitation = visitation;
-                  } else {
-                    prevVisitation = visitation;
                   }
-                } else {
-                  if (prevVisitation) {
-                    if (prevVisitation.type === "enter") {
-                      calculateVisitation(prevVisitation, visitation);
-                    }
-                  }
-
-                  prevVisitation = null;
                 }
+
+                prevVisitation = null;
               }
             }
           }
         }
+      }
 
-        let dictionaryKeys = [];
-        for (const key in dictionary) {
-          dictionaryKeys.push(key);
-        }
-        dictionaryKeys.sort();
+      let dictionaryKeys = [];
+      for (const key in dictionary) {
+        dictionaryKeys.push(key);
+      }
+      dictionaryKeys.sort();
 
-        let labels = [];
-        let data = [];
-        for (const key of dictionaryKeys) {
-          labels.push(new Date(key));
-          data.push(dictionary[key]);
-        }
+      let labels = [];
+      let data = [];
+      for (const key of dictionaryKeys) {
+        labels.push(new Date(key));
+        data.push(dictionary[key]);
+      }
 
-        this.chart.data.labels = labels;
-        this.chart.data.datasets[0].data = data;
-        this.chart.update();
+      this.chart.data.labels = labels;
+      this.chart.data.datasets[0].data = data;
+      this.chart.update();
+    }
+  },
+  watch: {
+    locationId(newData) {
+      if (newData) {
+        this.updateChart();
       }
     }
   },
   mounted() {
     this.$store.dispatch("location/findAll", { info: true }).then(() => {
-      this.$store.dispatch("visitor/findAll");
-      this.$store.dispatch("card/findAll");
-      this.$store.dispatch("visitation/findAll");
-      this.$store.dispatch("gate/findAll");
+      if (this.locations.length > 0) {
+        this.locationId = this.locations[0].id;
+      }
+
+      this.$store.dispatch("visitor/findAll").then(() => {
+        this.$store.dispatch("card/findAll").then(() => {
+          this.$store.dispatch("visitation/findAll").then(() => {
+            this.$store.dispatch("gate/findAll").then(() => {
+              this.updateChart();
+            });
+          });
+        });
+      });
     });
 
     let context = this.$refs.canvas.getContext("2d");

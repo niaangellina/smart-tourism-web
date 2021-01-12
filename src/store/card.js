@@ -3,7 +3,8 @@ import http from "../plugins/http-common";
 const card = {
   namespaced: true,
   state: () => ({
-    cards: []
+    cards: [],
+    selectedCard: null
   }),
   mutations: {
     replace(state, { cards }) {
@@ -11,12 +12,14 @@ const card = {
     },
     update(state, { card }) {
       let found = false;
-      state.cards.forEach((_, index, array) => {
-        if (array[index].id == card.id) {
-          array[index] = card;
+      for (const i in state.cards) {
+        if (state.cards[i].id === card.id) {
+          for (const key in card) {
+            state.cards[i][key] = card[key];
+          }
           found = true;
         }
-      });
+      }
 
       if (!found) {
         state.cards.push(card);
@@ -26,18 +29,37 @@ const card = {
       state.cards = state.cards.filter(card => {
         return card.id != cardId;
       });
+    },
+    select(state, { cardId }) {
+      let found = false;
+      state.cards.forEach(card => {
+        if (card.id === cardId) {
+          state.selectedCard = card;
+          found = true;
+        }
+      });
+
+      if (!found) {
+        state.selectedCard = null;
+      }
     }
   },
   actions: {
     async create({ commit, dispatch }, params) {
       const { info, card } = params || {};
-
       try {
-        const res = await http.post("/api/card", card);
+        const res = card.id
+          ? await http.put(`/api/card/${card.id}`, card)
+          : await http.post("/api/card", card);
+
         commit("update", { card: res.data });
 
         if (info) {
-          dispatch("toast/info", "Sukses menambah kartu", { root: true });
+          dispatch(
+            "toast/info",
+            card.id ? "Sukses mengubah kartu" : "Sukses menambah kartu",
+            { root: true }
+          );
         }
 
         return res.data;
@@ -102,6 +124,9 @@ const card = {
           throw err;
         }
       }
+    },
+    select({ commit }, { card }) {
+      commit("select", { cardId: card ? card.id : null });
     }
   }
 };

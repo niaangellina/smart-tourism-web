@@ -13,16 +13,19 @@
               <v-toolbar-title>Daftar Lokasi</v-toolbar-title>
               <v-divider class="mx-4" inset vertical />
               <v-spacer />
-              <LocationAdd />
+              <LocationDialog />
             </v-toolbar>
           </template>
           <template v-slot:[`item.type`]="{ item }">
             {{ typeText(item) }}
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-btn @click="remove(item)" color="error" small>
-              <v-icon left>mdi-delete</v-icon> hapus
-            </v-btn>
+            <v-icon @click="edit(item)" small class="mr-2">
+              mdi-pencil
+            </v-icon>
+            <v-icon @click="remove(item)" small class="mr-2">
+              mdi-delete
+            </v-icon>
           </template>
           <template v-slot:no-data> Tidak ada data </template>
         </v-data-table>
@@ -32,13 +35,13 @@
 </template>
 
 <script>
-import LocationAdd from "../components/LocationAdd";
+import LocationDialog from "../components/LocationDialog";
 import { mapState } from "vuex";
 
 export default {
   name: "LocationList",
   components: {
-    LocationAdd
+    LocationDialog
   },
   data: () => ({
     headers: [
@@ -75,6 +78,9 @@ export default {
         default:
           return "-";
       }
+    },
+    edit(location) {
+      this.$store.dispatch("location/select", { location: location });
     },
     remove(location) {
       this.$store.dispatch("confirmation/ask", {

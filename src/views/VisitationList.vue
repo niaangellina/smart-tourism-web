@@ -13,7 +13,7 @@
               <v-toolbar-title>Daftar Kunjungan</v-toolbar-title>
               <v-divider class="mx-4" inset vertical />
               <v-spacer />
-              <VisitationAdd />
+              <VisitationDialog />
             </v-toolbar>
           </template>
           <template v-slot:[`item.visitor`]="{ item }">
@@ -23,9 +23,12 @@
             {{ gateName(item) }}
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-btn @click="remove(item)" color="error" small>
-              <v-icon left>mdi-delete</v-icon> hapus
-            </v-btn>
+            <v-icon @click="edit(item)" small class="mr-2">
+              mdi-pencil
+            </v-icon>
+            <v-icon @click="remove(item)" small class="mr-2">
+              mdi-delete
+            </v-icon>
           </template>
           <template v-slot:no-data> Tidak ada data </template>
         </v-data-table>
@@ -35,13 +38,13 @@
 </template>
 
 <script>
-import VisitationAdd from "../components/VisitationAdd";
+import VisitationDialog from "../components/VisitationDialog";
 import { mapState } from "vuex";
 
 export default {
   name: "VisitationList",
   components: {
-    VisitationAdd
+    VisitationDialog
   },
   data: () => ({
     headers: [
@@ -65,6 +68,9 @@ export default {
     gateName(item) {
       const gate = this.gates.find(o => o.id === item.gateId) || {};
       return gate.name || "-";
+    },
+    edit(visitation) {
+      this.$store.dispatch("visitation/select", { visitation: visitation });
     },
     remove(visitation) {
       this.$store.dispatch("confirmation/ask", {

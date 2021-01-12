@@ -3,7 +3,8 @@ import http from "../plugins/http-common";
 const gate = {
   namespaced: true,
   state: () => ({
-    gates: []
+    gates: [],
+    selectedGate: null
   }),
   mutations: {
     replace(state, { gates }) {
@@ -11,12 +12,14 @@ const gate = {
     },
     update(state, { gate }) {
       let found = false;
-      state.gates.forEach((_, index, array) => {
-        if (array[index].id == gate.id) {
-          array[index] = gate;
+      for (const i in state.gates) {
+        if (state.gates[i].id === gate.id) {
+          for (const key in gate) {
+            state.gates[i][key] = gate[key];
+          }
           found = true;
         }
-      });
+      }
 
       if (!found) {
         state.gates.push(gate);
@@ -26,6 +29,19 @@ const gate = {
       state.gates = state.gates.filter(gate => {
         return gate.id != gateId;
       });
+    },
+    select(state, { gateId }) {
+      let found = false;
+      state.gates.forEach(gate => {
+        if (gate.id === gateId) {
+          state.selectedGate = gate;
+          found = true;
+        }
+      });
+
+      if (!found) {
+        state.selectedGate = null;
+      }
     }
   },
   actions: {
@@ -33,11 +49,18 @@ const gate = {
       const { info, gate } = params || {};
 
       try {
-        const res = await http.post("/api/gate", gate);
+        const res = gate.id
+          ? await http.put(`/api/gate/${gate.id}`, gate)
+          : await http.post("/api/gate", gate);
+
         commit("update", { gate: res.data });
 
         if (info) {
-          dispatch("toast/info", "Sukses menambah gate", { root: true });
+          dispatch(
+            "toast/info",
+            gate.id ? "Sukses mengubah gate" : "Sukses menambah gate",
+            { root: true }
+          );
         }
 
         return res.data;
@@ -102,6 +125,9 @@ const gate = {
           throw err;
         }
       }
+    },
+    select({ commit }, { gate }) {
+      commit("select", { gateId: gate ? gate.id : null });
     }
   }
 };

@@ -10,7 +10,9 @@
         <v-btn @click="close()" icon dark>
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Lokasi Baru</v-toolbar-title>
+        <v-toolbar-title>
+          {{ selectedLocation ? "Ubah Lokasi" : "Lokasi Baru" }}
+        </v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <v-divider inset vertical />
@@ -78,8 +80,10 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  name: "LocationAdd",
+  name: "LocationDialog",
   data: () => ({
     dialog: false,
     submitting: false,
@@ -107,10 +111,12 @@ export default {
         !this.longitude ||
         !this.latitude
       );
-    }
+    },
+    ...mapState("location", ["selectedLocation"])
   },
   methods: {
     reset() {
+      this.$store.dispatch("location/select", { location: null });
       this.name = null;
       this.type = null;
       this.longitude = null;
@@ -118,6 +124,9 @@ export default {
     },
     close() {
       this.dialog = false;
+      if (this.selectedLocation) {
+        this.reset();
+      }
     },
     submit() {
       this.submitting = true;
@@ -125,6 +134,7 @@ export default {
         .dispatch("location/create", {
           info: true,
           location: {
+            id: this.selectedLocation ? this.selectedLocation.id : undefined,
             name: this.name,
             type: this.type,
             longitude: this.longitude,
@@ -138,6 +148,18 @@ export default {
         .finally(() => {
           this.submitting = false;
         });
+    }
+  },
+  watch: {
+    selectedLocation(newData) {
+      if (newData) {
+        this.dialog = true;
+
+        this.name = newData.name;
+        this.type = newData.type;
+        this.longitude = newData.longitude;
+        this.latitude = newData.latitude;
+      }
     }
   }
 };

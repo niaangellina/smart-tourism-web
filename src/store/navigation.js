@@ -2,9 +2,9 @@ const navigation = {
   namespaced: true,
   state: () => ({
     currentRoute: {
-      title: "Daftar Lokasi",
-      icon: "mdi-view-list",
-      path: "/location"
+      title: "Registrasi Pengunjung",
+      icon: "mdi-file-edit",
+      path: "/visitor-registration"
     },
     routes: [
       {

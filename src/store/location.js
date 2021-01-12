@@ -3,7 +3,8 @@ import http from "../plugins/http-common";
 const location = {
   namespaced: true,
   state: () => ({
-    locations: []
+    locations: [],
+    selectedLocation: null
   }),
   mutations: {
     replace(state, { locations }) {
@@ -11,12 +12,14 @@ const location = {
     },
     update(state, { location }) {
       let found = false;
-      state.locations.forEach((_, index, array) => {
-        if (array[index].id == location.id) {
-          array[index] = location;
+      for (const i in state.locations) {
+        if (state.locations[i].id === location.id) {
+          for (const key in location) {
+            state.locations[i][key] = location[key];
+          }
           found = true;
         }
-      });
+      }
 
       if (!found) {
         state.locations.push(location);
@@ -26,6 +29,19 @@ const location = {
       state.locations = state.locations.filter(location => {
         return location.id != locationId;
       });
+    },
+    select(state, { locationId }) {
+      let found = false;
+      state.locations.forEach(location => {
+        if (location.id === locationId) {
+          state.selectedLocation = location;
+          found = true;
+        }
+      });
+
+      if (!found) {
+        state.selectedLocation = null;
+      }
     }
   },
   actions: {
@@ -33,11 +49,18 @@ const location = {
       const { info, location } = params || {};
 
       try {
-        const res = await http.post("/api/location", location);
+        const res = location.id
+          ? await http.put(`/api/location/${location.id}`, location)
+          : await http.post("/api/location", location);
+
         commit("update", { location: res.data });
 
         if (info) {
-          dispatch("toast/info", "Sukses menambah lokasi", { root: true });
+          dispatch(
+            "toast/info",
+            location.id ? "Sukses mengubah lokasi" : "Sukses menambah lokasi",
+            { root: true }
+          );
         }
 
         return res.data;
@@ -102,6 +125,9 @@ const location = {
           throw err;
         }
       }
+    },
+    select({ commit }, { location }) {
+      commit("select", { locationId: location ? location.id : null });
     }
   }
 };

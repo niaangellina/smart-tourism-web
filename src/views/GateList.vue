@@ -13,7 +13,7 @@
               <v-toolbar-title>Daftar Gate</v-toolbar-title>
               <v-divider class="mx-4" inset vertical />
               <v-spacer />
-              <GateAdd />
+              <GateDialog />
             </v-toolbar>
           </template>
           <template v-slot:[`item.location`]="{ item }">
@@ -23,9 +23,12 @@
             {{ typeText(item) }}
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-btn @click="remove(item)" color="error" small>
-              <v-icon left>mdi-delete</v-icon> hapus
-            </v-btn>
+            <v-icon @click="edit(item)" small class="mr-2">
+              mdi-pencil
+            </v-icon>
+            <v-icon @click="remove(item)" small class="mr-2">
+              mdi-delete
+            </v-icon>
           </template>
           <template v-slot:no-data> Tidak ada data </template>
         </v-data-table>
@@ -35,13 +38,13 @@
 </template>
 
 <script>
-import GateAdd from "../components/GateAdd";
+import GateDialog from "../components/GateDialog";
 import { mapState } from "vuex";
 
 export default {
   name: "GateList",
   components: {
-    GateAdd
+    GateDialog
   },
   data: () => ({
     headers: [
@@ -70,6 +73,9 @@ export default {
         default:
           return "-";
       }
+    },
+    edit(gate) {
+      this.$store.dispatch("gate/select", { gate: gate });
     },
     remove(gate) {
       this.$store.dispatch("confirmation/ask", {

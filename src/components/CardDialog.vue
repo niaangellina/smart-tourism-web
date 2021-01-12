@@ -10,7 +10,9 @@
         <v-btn @click="close()" icon dark>
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Kartu Baru</v-toolbar-title>
+        <v-toolbar-title>
+          {{ selectedCard ? "Ubah Kartu" : "Kartu Baru" }}
+        </v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <v-divider inset vertical />
@@ -54,8 +56,10 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  name: "CardAdd",
+  name: "CardDialog",
   data: () => ({
     dialog: false,
     submitting: false,
@@ -65,15 +69,20 @@ export default {
   computed: {
     submitDisabled() {
       return this.submitting || !this.tagId || !this.validityDate;
-    }
+    },
+    ...mapState("card", ["selectedCard"])
   },
   methods: {
     reset() {
+      this.$store.dispatch("card/select", { card: null });
       this.tagId = null;
       this.validityDate = null;
     },
     close() {
       this.dialog = false;
+      if (this.selectedCard) {
+        this.reset();
+      }
     },
     submit() {
       this.submitting = true;
@@ -81,6 +90,7 @@ export default {
         .dispatch("card/create", {
           info: true,
           card: {
+            id: this.selectedCard ? this.selectedCard.id : undefined,
             tagId: this.tagId,
             validityDate: this.validityDate
           }
@@ -92,6 +102,16 @@ export default {
         .finally(() => {
           this.submitting = false;
         });
+    }
+  },
+  watch: {
+    selectedCard(newData) {
+      if (newData) {
+        this.dialog = true;
+
+        this.tagId = newData.tagId;
+        this.validityDate = newData.validityDate;
+      }
     }
   }
 };

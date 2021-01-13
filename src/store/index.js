@@ -3,15 +3,15 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+import card from "./card";
 import confirmation from "./confirmation";
-import location from "./location";
 import gate from "./gate";
+import location from "./location";
 import navigation from "./navigation";
+import qrScanner from "./qr-scanner";
 import toast from "./toast";
 import visitation from "./visitation";
 import visitor from "./visitor";
-import card from "./card";
-
 
 export default new Vuex.Store({
   state: {},
@@ -19,13 +19,14 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
+    card: card,
     confirmation: confirmation,
-    location: location,
     gate: gate,
+    location: location,
     navigation: navigation,
+    qrScanner: qrScanner,
     toast: toast,
     visitation: visitation,
-    visitor: visitor,
-    card: card,
+    visitor: visitor
   }
 });

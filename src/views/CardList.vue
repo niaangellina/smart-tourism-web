@@ -13,13 +13,16 @@
               <v-toolbar-title>Daftar Kartu</v-toolbar-title>
               <v-divider class="mx-4" inset vertical />
               <v-spacer />
-              <CardAdd />
+              <CardDialog />
             </v-toolbar>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-btn @click="remove(item)" color="error" small>
-              <v-icon left>mdi-delete</v-icon> hapus
-            </v-btn>
+            <v-icon @click="edit(item)" small class="mr-2">
+              mdi-pencil
+            </v-icon>
+            <v-icon @click="remove(item)" small class="mr-2">
+              mdi-delete
+            </v-icon>
           </template>
           <template v-slot:no-data> Tidak ada data </template>
         </v-data-table>
@@ -29,39 +32,43 @@
 </template>
 
 <script>
-import CardAdd from "../components/CardAdd";
+import CardDialog from "../components/CardDialog";
 import { mapState } from "vuex";
 
 export default {
   name: "CardList",
   components: {
-    CardAdd,
+    CardDialog
   },
   data: () => ({
     headers: [
-      { text: "Id", value: "id" },
-      { text: "Id Tag", value: "tagId" },
+      { text: "ID", value: "id" },
+      { text: "ID Tag", value: "tagId" },
       { text: "Tanggal Berlaku", value: "validityDate" },
-      { text: "Perintah", value: "actions", sortable: false },
-    ],
+      { text: "Perintah", value: "actions", sortable: false }
+    ]
   }),
   computed: {
-    ...mapState("card", ["cards"]),
+    ...mapState("card", ["cards"])
   },
   methods: {
-    remove(item) {
+    edit(card) {
+      this.$store.dispatch("card/select", { card: card });
+    },
+    remove(card) {
       this.$store.dispatch("confirmation/ask", {
-        message: `Apakah anda yakin ingin menghapus card "${item.id}"?`,
+        message: `Apakah anda yakin ingin menghapus kartu "${card.id}"?`,
         callback: () => {
           return this.$store.dispatch("card/remove", {
-            cardId: item.id,
+            info: true,
+            cardId: card.id
           });
-        },
+        }
       });
-    },
+    }
   },
   mounted() {
-    this.$store.dispatch("card/findAll");
-  },
+    this.$store.dispatch("card/findAll", { info: true });
+  }
 };
 </script>

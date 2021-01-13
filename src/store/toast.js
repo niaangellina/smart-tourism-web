@@ -21,16 +21,10 @@ const toast = {
     }
   },
   actions: {
-    info({ commit }, params) {
-      if (typeof message === "object") {
-        commit("showMessage", {
-          message: params.message
-        });
-      } else {
-        commit("showMessage", {
-          message: params
-        });
-      }
+    info({ commit }, { message }) {
+      commit("showMessage", {
+        message: message
+      });
     },
     close({ commit }) {
       commit("closeMessage");

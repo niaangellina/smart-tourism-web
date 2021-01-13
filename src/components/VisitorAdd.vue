@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="480" persistent>
     <template v-slot:activator="{ on, attrs }">
       <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-        <v-icon left>mdi-plus-thick</v-icon> Tambah Gate
+        <v-icon left>mdi-plus-thick</v-icon> Tambah Pengunjung
       </v-btn>
     </template>
     <v-card>
@@ -10,48 +10,55 @@
         <v-btn @click="close()" icon dark>
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>
-          {{ selectedGate ? "Ubah Gate" : "Gate Baru" }}
-        </v-toolbar-title>
+        <v-toolbar-title>Pengunjung Baru</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <v-divider inset vertical />
         <v-row>
-          <v-col cols="12">
+          <v-col cols="6">
             <v-text-field
               v-model="name"
               label="Nama"
               :disabled="submitting"
+              clearable
               hide-details
               dense
               outlined
             ></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-select
-              v-model="locationId"
-              label="Lokasi"
-              :items="locations"
-              item-text="name"
-              item-value="id"
+            <v-text-field
+              v-model="age"
+              label="Umur"
+              type="number"
               :disabled="submitting"
+              clearable
               hide-details
               dense
               outlined
-            ></v-select>
+            ></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-select
-              v-model="type"
-              label="Jenis"
-              :items="types"
-              item-text="text"
-              item-value="value"
+            <v-text-field
+              v-model="gender"
+              label="Jenis Kelamin"
               :disabled="submitting"
+              clearable
               hide-details
               dense
               outlined
-            ></v-select>
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model="city"
+              label="Asal"
+              :disabled="submitting"
+              clearable
+              hide-details
+              dense
+              outlined
+            ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-btn
@@ -61,7 +68,7 @@
               color="success"
               block
             >
-              <v-icon left>mdi-upload</v-icon> Submit Gate
+              <v-icon left>mdi-upload</v-icon> Submit Pengunjung
             </v-btn>
           </v-col>
         </v-row>
@@ -71,52 +78,43 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
-  name: "GateDialog",
+  name: "VisitorAdd",
   data: () => ({
     dialog: false,
     submitting: false,
     name: null,
-    locationId: null,
-    type: null,
-    types: [
-      { text: "Masuk", value: "enter" },
-      { text: "Keluar", value: "exit" }
-    ]
+    age: null,
+    gender: null,
+    city: null,
   }),
   computed: {
     submitDisabled() {
-      return this.submitting || !this.name || !this.locationId || !this.type;
+      return (
+        this.submitting || !this.name || !this.age || !this.gender || !this.city
+      );
     },
-    ...mapState("gate", ["selectedGate"]),
-    ...mapState("location", ["locations"])
   },
   methods: {
     reset() {
-      this.$store.dispatch("gate/select", { gate: null });
       this.name = null;
-      this.locationId = null;
-      this.type = null;
+      this.age = null;
+      this.gender = null;
+      this.city = null;
     },
     close() {
       this.dialog = false;
-      if (this.selectedGate) {
-        this.reset();
-      }
     },
     submit() {
       this.submitting = true;
       this.$store
-        .dispatch("gate/create", {
-          info: true,
-          gate: {
-            id: this.selectedGate ? this.selectedGate.id : undefined,
+        .dispatch("visitor/create", {
+          visitor: {
             name: this.name,
-            locationId: this.locationId,
-            type: this.type
-          }
+            age: this.age,
+            gender: this.gender,
+            city: this.city,
+          },
         })
         .then(() => {
           this.close();
@@ -125,21 +123,7 @@ export default {
         .finally(() => {
           this.submitting = false;
         });
-    }
+    },
   },
-  watch: {
-    selectedGate(newData) {
-      if (newData) {
-        this.dialog = true;
-
-        this.name = newData.name;
-        this.locationId = newData.locationId;
-        this.type = newData.type;
-      }
-    }
-  },
-  mounted() {
-    this.$store.dispatch("location/findAll");
-  }
 };
 </script>

@@ -3,8 +3,7 @@ import http from "../plugins/http-common";
 const card = {
   namespaced: true,
   state: () => ({
-    cards: [],
-    selectedCard: null
+    cards: []
   }),
   mutations: {
     replace(state, { cards }) {
@@ -12,14 +11,12 @@ const card = {
     },
     update(state, { card }) {
       let found = false;
-      for (const i in state.cards) {
-        if (state.cards[i].id === card.id) {
-          for (const key in card) {
-            state.cards[i][key] = card[key];
-          }
+      state.cards.forEach((_, index, array) => {
+        if (array[index].id == card.id) {
+          array[index] = card;
           found = true;
         }
-      }
+      });
 
       if (!found) {
         state.cards.push(card);
@@ -29,104 +26,98 @@ const card = {
       state.cards = state.cards.filter(card => {
         return card.id != cardId;
       });
-    },
-    select(state, { cardId }) {
-      let found = false;
-      state.cards.forEach(card => {
-        if (card.id === cardId) {
-          state.selectedCard = card;
-          found = true;
-        }
-      });
-
-      if (!found) {
-        state.selectedCard = null;
-      }
     }
   },
   actions: {
-    async create({ commit, dispatch }, params) {
-      const { info, card } = params || {};
+    async create({ commit, dispatch }, { card }) {
       try {
-        const res = card.id
-          ? await http.put(`/api/card/${card.id}`, card)
-          : await http.post("/api/card", card);
-
+        const res = await http.post("/api/card", card);
         commit("update", { card: res.data });
 
-        if (info) {
+        dispatch(
+          "toast/info",
+          { message: "Sukses menambah card" },
+          { root: true }
+        );
+
+        return res.data;
+      } catch (err) {
+        if (err.response) {
           dispatch(
             "toast/info",
-            card.id ? "Sukses mengubah kartu" : "Sukses menambah kartu",
+            {
+              message: `Gagal menambah card, kesalahan server ${err.response.status}`
+            },
+            { root: true }
+          );
+        } else {
+          dispatch(
+            "toast/info",
+            { message: "Gagal menambah card, tidak ada jaringan" },
             { root: true }
           );
         }
 
-        return res.data;
-      } catch (err) {
-        if (info) {
-          const errInfo = err.response
-            ? `kesalahan server ${err.response.status}`
-            : "tidak ada jaringan";
-
-          dispatch("toast/info", `Gagal menambah kartu, ${errInfo}`, {
-            root: true
-          });
-        } else {
-          throw err;
-        }
+        throw err;
       }
     },
-    async findAll({ commit, dispatch }, params) {
-      const { info } = params || {};
-
+    async findAll({ commit, dispatch }) {
       try {
         const res = await http.get("/api/card");
         commit("replace", { cards: res.data });
 
         return res.data;
       } catch (err) {
-        if (info) {
-          const errInfo = err.response
-            ? `kesalahan server ${err.response.status}`
-            : "tidak ada jaringan";
-
-          dispatch("toast/info", `Gagal mengambil daftar kartu, ${errInfo}`, {
-            root: true
-          });
+        if (err.response) {
+          dispatch(
+            "toast/info",
+            {
+              message: `Gagal mengambil daftar card, kesalahan server ${err.response.status}`
+            },
+            { root: true }
+          );
         } else {
-          throw err;
+          dispatch(
+            "toast/info",
+            { message: "Gagal mengambil daftar card, tidak ada jaringan" },
+            { root: true }
+          );
         }
+
+        throw err;
       }
     },
-    async remove({ commit, dispatch }, params) {
-      const { info, cardId } = params || {};
-
+    async remove({ commit, dispatch }, { cardId }) {
       try {
         const res = await http.delete(`/api/card/${cardId}`);
         commit("remove", { cardId: res.data.id });
 
-        if (info) {
-          dispatch("toast/info", "Sukses menghapus kartu", { root: true });
-        }
+        dispatch(
+          "toast/info",
+          { message: "Sukses menghapus card" },
+          { root: true }
+        );
 
         return res.data;
       } catch (err) {
-        if (info) {
-          const errInfo = err.response
-            ? `kesalahan server ${err.response.status}`
-            : "tidak ada jaringan";
-
-          dispatch("toast/info", `Gagal menghapus kartu, ${errInfo}`, {
-            root: true
-          });
+        if (err.response) {
+          dispatch(
+            "toast/info",
+            {
+              message: `Gagal menghapus card, kesalahan server ${err.response.status}`
+            },
+            { root: true }
+          );
         } else {
-          throw err;
+          dispatch(
+            "toast/info",
+            { message: "Gagal menghapus card, tidak ada jaringan" },
+            { root: true }
+          );
         }
+
+        throw err;
       }
-    },
-    select({ commit }, { card }) {
-      commit("select", { cardId: card ? card.id : null });
     }
   }
 };

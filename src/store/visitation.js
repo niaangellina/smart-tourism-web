@@ -3,8 +3,7 @@ import http from "../plugins/http-common";
 const visitation = {
   namespaced: true,
   state: () => ({
-    visitations: [],
-    selectedVisitation: null
+    visitations: []
   }),
   mutations: {
     replace(state, { visitations }) {
@@ -12,14 +11,12 @@ const visitation = {
     },
     update(state, { visitation }) {
       let found = false;
-      for (const i in state.visitations) {
-        if (state.visitations[i].id === visitation.id) {
-          for (const key in visitation) {
-            state.visitations[i][key] = visitation[key];
-          }
+      state.visitations.forEach((_, index, array) => {
+        if (array[index].id == visitation.id) {
+          array[index] = visitation;
           found = true;
         }
-      }
+      });
 
       if (!found) {
         state.visitations.push(visitation);
@@ -29,109 +26,98 @@ const visitation = {
       state.visitations = state.visitations.filter(visitation => {
         return visitation.id != visitationId;
       });
-    },
-    select(state, { visitationId }) {
-      let found = false;
-      state.visitations.forEach(visitation => {
-        if (visitation.id === visitationId) {
-          state.selectedVisitation = visitation;
-          found = true;
-        }
-      });
-
-      if (!found) {
-        state.selectedVisitation = null;
-      }
     }
   },
   actions: {
-    async create({ commit, dispatch }, params) {
-      const { info, visitation } = params || {};
-
+    async create({ commit, dispatch }, { visitation }) {
       try {
-        const res = visitation.id
-          ? await http.put(`/api/visitation/${visitation.id}`, visitation)
-          : await http.post("/api/visitation", visitation);
-
+        const res = await http.post("/api/visitation", visitation);
         commit("update", { visitation: res.data });
 
-        if (info) {
+        dispatch(
+          "toast/info",
+          { message: "Sukses menambah kunjungan" },
+          { root: true }
+        );
+
+        return res.data;
+      } catch (err) {
+        if (err.response) {
           dispatch(
             "toast/info",
-            visitation.id
-              ? "Sukses mengubah kunjungan"
-              : "Sukses menambah kunjungan",
+            {
+              message: `Gagal menambah kunjungan, kesalahan server ${err.response.status}`
+            },
+            { root: true }
+          );
+        } else {
+          dispatch(
+            "toast/info",
+            { message: "Gagal menambah kunjungan, tidak ada jaringan" },
             { root: true }
           );
         }
 
-        return res.data;
-      } catch (err) {
-        if (info) {
-          const errInfo = err.response
-            ? `kesalahan server ${err.response.status}`
-            : "tidak ada jaringan";
-
-          dispatch("toast/info", `Gagal menambah kunjungan, ${errInfo}`, {
-            root: true
-          });
-        } else {
-          throw err;
-        }
+        throw err;
       }
     },
-    async findAll({ commit, dispatch }, params) {
-      const { info } = params || {};
-
+    async findAll({ commit, dispatch }) {
       try {
         const res = await http.get("/api/visitation");
         commit("replace", { visitations: res.data });
 
         return res.data;
       } catch (err) {
-        if (info) {
-          const errInfo = err.response
-            ? `kesalahan server ${err.response.status}`
-            : "tidak ada jaringan";
-
+        if (err.response) {
           dispatch(
             "toast/info",
-            `Gagal mengambil daftar kunjungan, ${errInfo}`,
+            {
+              message: `Gagal mengambil daftar kunjungan, kesalahan server ${err.response.status}`
+            },
             { root: true }
           );
         } else {
-          throw err;
+          dispatch(
+            "toast/info",
+            { message: "Gagal mengambil daftar kunjungan, tidak ada jaringan" },
+            { root: true }
+          );
         }
+
+        throw err;
       }
     },
-    async remove({ commit, dispatch }, params) {
-      const { info, visitationId } = params || {};
-
+    async remove({ commit, dispatch }, { visitationId }) {
       try {
         const res = await http.delete(`/api/visitation/${visitationId}`);
         commit("remove", { visitationId: res.data.id });
 
-        if (info) {
-          dispatch("toast/info", "Sukses menghapus kunjungan", { root: true });
-        }
+        dispatch(
+          "toast/info",
+          { message: "Sukses menghapus kunjungan" },
+          { root: true }
+        );
 
         return res.data;
       } catch (err) {
-        if (info) {
-          const errInfo = err.response
-            ? `kesalahan server ${err.response.status}`
-            : "tidak ada jaringan";
-
-          dispatch("toast/info", `Gagal menghapus kunjungan, ${errInfo}`, {
-            root: true
-          });
+        if (err.response) {
+          dispatch(
+            "toast/info",
+            {
+              message: `Gagal menghapus kunjungan, kesalahan server ${err.response.status}`
+            },
+            { root: true }
+          );
         } else {
-          throw err;
+          dispatch(
+            "toast/info",
+            { message: "Gagal menghapus kunjungan, tidak ada jaringan" },
+            { root: true }
+          );
         }
+
+        throw err;
       }
-    },
-    select({ commit }, { visitation }) {
-      commit("select", { visitationId: visitation ? visitation.id : null });
     }
   }
 };

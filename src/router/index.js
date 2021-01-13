@@ -5,20 +5,15 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/visitor-registration",
-    alias: "/",
-    name: "VisitorRegistration",
-    component: () => import("../views/VisitorRegistration")
-  },
-  {
-    path: "/location-statistic",
-    name: "LocationStatistic",
-    component: () => import("../views/LocationStatistic")
-  },
-  {
     path: "/location",
+    alias: "/",
     name: "LocationList",
     component: () => import("../views/LocationList")
+  },
+  {
+    path: "/formulir",
+    name: "Formulir",
+    component: () => import("../views/Formulir")
   },
   {
     path: "/gate",

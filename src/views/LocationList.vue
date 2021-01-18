@@ -50,6 +50,7 @@ export default {
       { text: "Jenis", value: "type" },
       { text: "Sudut Bujur", value: "longitude" },
       { text: "Sudut Lintang", value: "latitude" },
+      { text: "Deskripsi", value: "description" },
       { text: "Perintah", value: "actions", sortable: false }
     ]
   }),

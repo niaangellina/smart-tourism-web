@@ -63,6 +63,16 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12">
+            <v-textarea
+              v-model="description"
+              label="Deskripsi"
+              :disabled="submitting"
+              hide-details
+              dense
+              outlined
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12">
             <v-btn
               @click="submit()"
               :disabled="submitDisabled"
@@ -100,7 +110,8 @@ export default {
       { text: "Tempat Makan", value: "food_court" }
     ],
     longitude: null,
-    latitude: null
+    latitude: null,
+    description: null
   }),
   computed: {
     submitDisabled() {
@@ -109,7 +120,8 @@ export default {
         !this.name ||
         !this.type ||
         !this.longitude ||
-        !this.latitude
+        !this.latitude ||
+        !this.description
       );
     },
     ...mapState("location", ["selectedLocation"])
@@ -121,6 +133,7 @@ export default {
       this.type = null;
       this.longitude = null;
       this.latitude = null;
+      this.description = null;
     },
     close() {
       this.dialog = false;
@@ -138,7 +151,8 @@ export default {
             name: this.name,
             type: this.type,
             longitude: this.longitude,
-            latitude: this.latitude
+            latitude: this.latitude,
+            description: this.description
           }
         })
         .then(() => {
@@ -159,6 +173,7 @@ export default {
         this.type = newData.type;
         this.longitude = newData.longitude;
         this.latitude = newData.latitude;
+        this.description = newData.description;
       }
     }
   }
